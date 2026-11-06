@@ -87,8 +87,13 @@ uv run mypy
 
 ## Measure
 
+This one runs on the host, from the repository root of a git
+clone, and needs only Python 3 and git. That is the supported
+way: it reads the max-length rule commits with `git log`, and
+the `examples` image has no git, so there is no Compose form.
+
 ```bash
-python3 architectures/measure.py
+python3 architectures/measure.py   # on the host: Python 3 + git
 ```
 
 Standard library only. It counts files, lines, classes and

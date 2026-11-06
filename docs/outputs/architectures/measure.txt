@@ -1,4 +1,4 @@
-$ python3 architectures/measure.py
+$ python3 architectures/measure.py   # on the host: Python 3 + git
 variant          files  lines  classes  protos  tests  touched
 layered             11    339       21       0     14        3
 hexagonal           15    364       29       3     14        3
