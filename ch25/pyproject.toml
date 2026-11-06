@@ -1,0 +1,70 @@
+[project]
+name = "ch25-modular-monolith"
+version = "1.0.0"
+description = "Chapter 25: two hexagons in one deployable."
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi==0.162.0",
+    "pydantic==2.14.3",
+]
+
+[dependency-groups]
+dev = [
+    "httpx2==2.16.0",
+    "import-linter==2.16",
+    "mypy==2.4.1",
+    "pytest==9.2.0",
+    "pytest-asyncio==1.4.1.post1",
+    "ruff==0.17.4",
+]
+
+[build-system]
+requires = ["uv_build>=0.13.7,<0.14"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "roombook"
+
+[tool.ruff]
+line-length = 68
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+
+[tool.mypy]
+strict = true
+files = ["src", "tests"]
+
+[tool.pytest]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+asyncio_default_test_loop_scope = "function"
+
+[tool.importlinter]
+root_package = "roombook"
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "Booking and billing are independent"
+type = "independence"
+modules = ["roombook.booking", "roombook.billing"]
+
+[[tool.importlinter.contracts]]
+name = "Each context is a hexagon"
+type = "layers"
+containers = ["roombook.booking", "roombook.billing"]
+layers = ["adapters", "application", "domain"]
+
+[[tool.importlinter.contracts]]
+name = "Cores and contracts import no framework"
+type = "forbidden"
+source_modules = [
+    "roombook.booking.domain",
+    "roombook.booking.application",
+    "roombook.billing.domain",
+    "roombook.billing.application",
+    "roombook.contracts",
+    "roombook.platform",
+]
+forbidden_modules = ["fastapi", "pydantic", "starlette"]
