@@ -1,5 +1,11 @@
 # hexagonal-python-examples
 
+<p align="center">
+  <img src="cover.png"
+       alt="Hexagonal Architecture in Python, by Gabriel Anhaia"
+       width="260" />
+</p>
+
 Companion code for *Hexagonal Architecture in Python* by Gabriel
 Anhaia.
 
