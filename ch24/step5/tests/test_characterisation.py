@@ -27,7 +27,7 @@ BOOKING_KEYS = {
 type AgeHold = Callable[[str, int], Awaitable[None]]
 
 
-class Tillpoint(Protocol):
+class Coinwren(Protocol):
     declines: bool
 
     @property
@@ -148,8 +148,8 @@ async def test_hold_next_to_another_is_allowed(
     assert response.status_code == 201
 
 
-async def test_confirm_charges_tillpoint_and_confirms(
-    client: httpx2.AsyncClient, tillpoint: Tillpoint
+async def test_confirm_charges_coinwren_and_confirms(
+    client: httpx2.AsyncClient, coinwren: Coinwren
 ) -> None:
     booking_id = await held(client, "10:00", "11:00")
 
@@ -158,19 +158,19 @@ async def test_confirm_charges_tillpoint_and_confirms(
     assert response.status_code == 200
     assert set(response.json()) == BOOKING_KEYS
     assert response.json()["status"] == "CONFIRMED"
-    assert tillpoint.charges == [
+    assert coinwren.charges == [
         {"amount": 2400, "currency": "EUR", "reference": booking_id}
     ]
 
 
 async def test_a_declined_payment_is_402_and_keeps_the_hold(
-    client: httpx2.AsyncClient, tillpoint: Tillpoint
+    client: httpx2.AsyncClient, coinwren: Coinwren
 ) -> None:
     booking_id = await held(client, "10:00", "11:00")
-    tillpoint.declines = True
+    coinwren.declines = True
 
     declined = await client.post(f"/bookings/{booking_id}/confirm")
-    tillpoint.declines = False
+    coinwren.declines = False
     retried = await client.post(f"/bookings/{booking_id}/confirm")
 
     assert declined.status_code == 402

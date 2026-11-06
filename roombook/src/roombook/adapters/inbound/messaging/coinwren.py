@@ -1,4 +1,4 @@
-"""Consume Tillpoint payment events; confirm paid bookings."""
+"""Consume Coinwren payment events; confirm paid bookings."""
 
 from typing import Any, Protocol
 
@@ -14,14 +14,14 @@ from roombook.application.confirm_booking import (
 from roombook.domain.errors import BookingError
 from roombook.domain.ids import BookingId
 
-PAYMENTS_TOPIC = "tillpoint.payments"
-DEAD_LETTER_TOPIC = "tillpoint.payments.dead-letter"
+PAYMENTS_TOPIC = "coinwren.payments"
+DEAD_LETTER_TOPIC = "coinwren.payments.dead-letter"
 CONSUMER_GROUP = "roombook"
 
 log = structlog.get_logger()
 
 
-class TillpointEvent(BaseModel):
+class CoinwrenEvent(BaseModel):
     id: str
     type: str
     data: dict[str, Any]
@@ -40,7 +40,7 @@ class ProcessedMessages(Protocol):
     async def remember(self, message_id: str) -> None: ...
 
 
-class TillpointConsumer:
+class CoinwrenConsumer:
     """Idempotent: a redelivered event is skipped."""
 
     def __init__(
@@ -52,7 +52,7 @@ class TillpointConsumer:
         self._processed = processed
 
     async def handle(self, body: object) -> None:
-        event = TillpointEvent.model_validate(body)
+        event = CoinwrenEvent.model_validate(body)
         if event.type != "payment.succeeded":
             return
         if await self._processed.seen(event.id):
@@ -72,7 +72,7 @@ class TillpointConsumer:
 PERMANENT_FAILURES = (ValidationError, BookingError)
 
 
-def tillpoint_router(consumer: TillpointConsumer) -> KafkaRouter:
+def coinwren_router(consumer: CoinwrenConsumer) -> KafkaRouter:
     """Retry what may heal; dead-letter what never will."""
     router = KafkaRouter()
     dead_letters = router.publisher(DEAD_LETTER_TOPIC)

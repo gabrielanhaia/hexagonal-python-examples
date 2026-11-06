@@ -11,7 +11,7 @@ _db = Path(tempfile.mkdtemp()) / "test.db"
 os.environ["ROOMBOOK_DATABASE_URL"] = f"sqlite+aiosqlite:///{_db}"
 
 from app.db import SessionLocal, engine  # noqa: E402
-from app.main import app, get_tillpoint  # noqa: E402
+from app.main import app, get_coinwren  # noqa: E402
 from app.models import Base, Room  # noqa: E402
 
 
@@ -21,7 +21,7 @@ def charges() -> list[httpx2.Request]:
 
 
 @pytest.fixture
-def tillpoint(
+def coinwren(
     charges: list[httpx2.Request],
 ) -> Iterator[None]:
     def handler(request: httpx2.Request) -> httpx2.Response:
@@ -31,18 +31,18 @@ def tillpoint(
     async def fake() -> AsyncIterator[httpx2.AsyncClient]:
         async with httpx2.AsyncClient(
             transport=httpx2.MockTransport(handler),
-            base_url="https://tillpoint.test",
+            base_url="https://coinwren.test",
         ) as client:
             yield client
 
-    app.dependency_overrides[get_tillpoint] = fake
+    app.dependency_overrides[get_coinwren] = fake
     yield
     app.dependency_overrides.clear()
 
 
 @pytest.fixture
 async def client(
-    tillpoint: None,
+    coinwren: None,
 ) -> AsyncIterator[httpx2.AsyncClient]:
     async with engine.begin() as connection:
         await connection.run_sync(Base.metadata.drop_all)

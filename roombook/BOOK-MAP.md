@@ -44,7 +44,7 @@ never re-wrap or retype them.
 - Adapter-owned ports: `UseCases` in
   `S/adapters/inbound/http/dependencies.py` and
   `S/adapters/inbound/cli/commands.py`; `ProcessedMessages` in
-  `S/adapters/inbound/messaging/tillpoint.py`. Each driving adapter
+  `S/adapters/inbound/messaging/coinwren.py`. Each driving adapter
   declares only what it needs; `Roombook` satisfies all of them
   structurally.
 
@@ -138,8 +138,8 @@ never re-wrap or retype them.
   table, `problem_response`, `application/problem+json`).
 - CLI: `S/adapters/inbound/cli/commands.py` (`build_parser`, `run`,
   `_dispatch` with `match`, `EXIT_CODES`).
-- Consumer: `S/adapters/inbound/messaging/tillpoint.py`
-  (`TillpointConsumer.handle`, `tillpoint_router` with
+- Consumer: `S/adapters/inbound/messaging/coinwren.py`
+  (`CoinwrenConsumer.handle`, `coinwren_router` with
   `AckPolicy.NACK_ON_ERROR`, dead-letter publisher).
 - Job: `S/adapters/inbound/jobs/expire_holds.py`.
 - The core never changed: same `HoldRoom` behind all three.
@@ -148,7 +148,7 @@ never re-wrap or retype them.
   `cli-expire-holds.txt`, `cli-help.txt`, `consumer.txt`.
 - Tests: `roombook/tests/e2e/test_http.py`,
   `roombook/tests/integration/test_cli.py`,
-  `roombook/tests/integration/test_tillpoint_consumer.py`
+  `roombook/tests/integration/test_coinwren_consumer.py`
   (FastStream `TestKafkaBroker`).
 
 ### 12. Driven Adapters: SQLAlchemy 2 Without Letting It In
@@ -183,10 +183,10 @@ never re-wrap or retype them.
   `roombook/migrations/versions/0001_bookings.py` (`CREATE
   EXTENSION btree_gist`, the `EXCLUDE USING gist` constraint),
   `0002_seed_rooms.py`.
-- Tillpoint client: `S/adapters/outbound/payments/tillpoint.py`
+- Coinwren client: `S/adapters/outbound/payments/coinwren.py`
   (`import httpx2`, `Idempotency-Key`, every provider failure
   becomes `PaymentUnavailable`). Tests with `httpx2.MockTransport`:
-  `roombook/tests/integration/test_tillpoint_gateway.py`.
+  `roombook/tests/integration/test_coinwren_gateway.py`.
 
 ### 13. Wiring: the Composition Root
 
@@ -198,7 +198,7 @@ never re-wrap or retype them.
   `run_relay`.
 - `S/settings.py`: pydantic-settings, `ROOMBOOK_` prefix,
   `SecretStr`, `Literal` adapter switches (`payments="fake" |
-  "tillpoint"`, `notifier="console" | "smtp"`).
+  "coinwren"`, `notifier="console" | "smtp"`).
 - dishka: `S/composition_dishka.py` (`Provider`, `Scope.APP`,
   `from_context`, generator providers for finalisation,
   `@decorate` for the tracing decorators, `provide_all`,
@@ -240,7 +240,7 @@ never re-wrap or retype them.
   refuses one; the loser's `__cause__` is `IntegrityError`).
   Output: `docs/outputs/roombook/concurrency.txt`.
 - Translation: `SqlAlchemyBookingRepository.add`.
-- Idempotency keys: `Idempotency-Key` header in the Tillpoint
+- Idempotency keys: `Idempotency-Key` header in the Coinwren
   client; idempotent `Booking.confirm`; `processed_messages`.
 
 ### 20. Errors That Cross Boundaries
@@ -251,9 +251,9 @@ never re-wrap or retype them.
 - CLI: `EXIT_CODES` in `S/adapters/inbound/cli/commands.py`
   (2 bad input, 3 not found, 4 conflict, 5 payments down).
 - Consumer: `PERMANENT_FAILURES` in
-  `S/adapters/inbound/messaging/tillpoint.py` (dead-letter);
+  `S/adapters/inbound/messaging/coinwren.py` (dead-letter);
   anything else raises, `NACK_ON_ERROR` redelivers.
-- Provider errors never leak: `TillpointPaymentGateway`; SQL errors
+- Provider errors never leak: `CoinwrenPaymentGateway`; SQL errors
   never leak: `SqlAlchemyBookingRepository.add`.
 - Outputs: `curl-hold.txt` (409, 404), `cli-hold-conflict.txt`
   (exit 4), `cli-hold-closed.txt` (exit 2).
@@ -269,13 +269,13 @@ never re-wrap or retype them.
 - Relay: `S/adapters/outbound/outbox/relay.py` (`OutboxRelay`,
   `FOR UPDATE SKIP LOCKED`, `kafka_publisher` with key and
   `message-id` header). At-least-once.
-- Idempotent consumer: `TillpointConsumer` +
+- Idempotent consumer: `CoinwrenConsumer` +
   `S/adapters/outbound/sqlalchemy/processed.py`
   (`INSERT ... ON CONFLICT DO NOTHING`). Duplicates between a
   successful confirm and `remember()` are absorbed by
   `Booking.confirm` being idempotent for the same payment id.
 - Tests: `roombook/tests/integration/test_outbox_relay.py`,
-  `test_tillpoint_consumer.py`.
+  `test_coinwren_consumer.py`.
 - Outputs: `outbox-relay.txt` (relay log + the topic, keyed, with
   headers), `consumer.txt` (one payment delivered twice: applied
   once, duplicate skipped).

@@ -16,7 +16,7 @@ in all five: the HTTP behaviour it pins never changes.
 - `step4/`: one route moves. Hold goes through the `HoldRoom`
   use case; confirm and cancel are untouched.
 - `step5/`: the rest is strangled. `ConfirmBooking`,
-  `CancelBooking` and a `PaymentGateway` port with a Tillpoint
+  `CancelBooking` and a `PaymentGateway` port with a Coinwren
   adapter; routes move to `app/adapters/http.py`, persistence to
   `app/adapters/sqlalchemy/`, and import-linter enforces the
   dependency rule.

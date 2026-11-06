@@ -19,9 +19,9 @@ from sqlalchemy.ext.asyncio import (
 
 from roombook.adapters.inbound.cli.commands import build_parser, run
 from roombook.adapters.inbound.http.app import State, create_app
-from roombook.adapters.inbound.messaging.tillpoint import (
-    TillpointConsumer,
-    tillpoint_router,
+from roombook.adapters.inbound.messaging.coinwren import (
+    CoinwrenConsumer,
+    coinwren_router,
 )
 from roombook.adapters.outbound.memory.fakes import (
     FakePaymentGateway,
@@ -44,9 +44,9 @@ from roombook.adapters.outbound.outbox.relay import (
     OutboxRelay,
     kafka_publisher,
 )
-from roombook.adapters.outbound.payments.tillpoint import (
-    TillpointPaymentGateway,
-    tillpoint_client,
+from roombook.adapters.outbound.payments.coinwren import (
+    CoinwrenPaymentGateway,
+    coinwren_client,
 )
 from roombook.adapters.outbound.sqlalchemy.processed import (
     SqlAlchemyProcessedMessages,
@@ -137,10 +137,10 @@ async def payment_gateway(
     if settings.payments == "fake":
         yield FakePaymentGateway()
         return
-    api_key = settings.tillpoint_api_key.get_secret_value()
-    client = tillpoint_client(settings.tillpoint_url, api_key)
+    api_key = settings.coinwren_api_key.get_secret_value()
+    client = coinwren_client(settings.coinwren_url, api_key)
     async with client:
-        yield TillpointPaymentGateway(client)
+        yield CoinwrenPaymentGateway(client)
 
 
 def notifier(settings: Settings) -> Notifier:
@@ -220,7 +220,7 @@ def run_consumer() -> None:
             database(settings) as sessions,
             roombook(settings, sessions) as use_cases,
         ):
-            consumer = TillpointConsumer(
+            consumer = CoinwrenConsumer(
                 use_cases.confirm_booking,
                 SqlAlchemyProcessedMessages(sessions),
             )
@@ -228,7 +228,7 @@ def run_consumer() -> None:
             broker = KafkaBroker(
                 settings.kafka_servers, logger=logger
             )
-            broker.include_router(tillpoint_router(consumer))
+            broker.include_router(coinwren_router(consumer))
             await FastStream(broker, logger=logger).run()
 
     asyncio.run(consume())

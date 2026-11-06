@@ -14,9 +14,9 @@ class Settings(BaseSettings):
     )
     kafka_servers: str = "localhost:9092"
 
-    payments: Literal["fake", "tillpoint"] = "fake"
-    tillpoint_url: str = "https://api.tillpoint.example"
-    tillpoint_api_key: SecretStr = SecretStr("")
+    payments: Literal["fake", "coinwren"] = "fake"
+    coinwren_url: str = "https://api.coinwren.example"
+    coinwren_api_key: SecretStr = SecretStr("")
 
     notifier: Literal["console", "smtp"] = "console"
     smtp_host: str = "localhost"

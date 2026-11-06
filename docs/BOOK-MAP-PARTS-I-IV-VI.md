@@ -22,8 +22,8 @@ Quote:
 
 - `ch01/app/main.py`: `hold_room` (opening hours, the overlap
   query and pricing, all inline), `confirm_booking` (the
-  Tillpoint call inline, `402` on decline), `cancel_booking`,
-  `get_tillpoint`, `lifespan` (creates tables, seeds `atlas`).
+  Coinwren call inline, `402` on decline), `cancel_booking`,
+  `get_coinwren`, `lifespan` (creates tables, seeds `atlas`).
 - `ch01/app/models.py`: `Booking.is_expired` and
   `Booking.cancellation_fee` (both read `datetime.now(UTC)`
   inside the model), `HOLD_TTL`, `UTCDateTime`.
@@ -31,7 +31,7 @@ Quote:
 - `ch01/app/db.py`: the engine built at import time from
   settings.
 - `ch01/tests/conftest.py`: the env var set before importing the
-  app, and `app.dependency_overrides` for Tillpoint. Every test
+  app, and `app.dependency_overrides` for Coinwren. Every test
   needs the database.
 
 Output: `docs/outputs/ch01/pytest.txt`.
@@ -76,7 +76,7 @@ Quote:
   (`get`, `save`), `PaymentGateway.charge`.
 - `ch05/consumer_defined/confirm.py`: the same use case in the
   domain's words.
-- `ch05/consumer_defined/tillpoint.py`: `TillpointPayments`,
+- `ch05/consumer_defined/coinwren.py`: `CoinwrenPayments`,
   where the HTTP shape went.
 - `ch05/model.py`: `Booking.can_confirm`, `Booking.confirm`.
 - The fakes, side by side: `ScriptedDatabase`, `CannedResponse`,
@@ -219,7 +219,7 @@ measured.
 - Invariant: `tests/test_characterisation.py` is byte-identical
   in all five steps (17 tests).
 - step1: `app/` is byte-identical to `ch01/app`.
-  `tests/conftest.py`: `FakeTillpoint`, `age_hold`.
+  `tests/conftest.py`: `FakeCoinwren`, `age_hold`.
 - step2: `app/domain/booking.py` (`hold_cutoff`, `hold_expired`,
   `cancellation_fee`), `app/domain/room.py`
   (`OpeningHours.contain`, `Room.price_for`),
@@ -239,7 +239,7 @@ measured.
   next to the untouched confirm and cancel routes.
 - step5: `app/application/confirm_booking.py`,
   `app/application/cancel_booking.py`,
-  `app/adapters/http.py`, `app/adapters/tillpoint.py`,
+  `app/adapters/http.py`, `app/adapters/coinwren.py`,
   `app/adapters/schemas.py` (`BookingOut.of`), `app/main.py`
   (composition root), and the contracts in `pyproject.toml`.
 

@@ -8,13 +8,13 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.adapters.clock import SystemClock
+from app.adapters.coinwren import CoinwrenPayments, get_coinwren
 from app.adapters.schemas import BookingOut, CancellationOut, HoldIn
 from app.adapters.sqlalchemy.database import get_session
 from app.adapters.sqlalchemy.repositories import (
     SqlAlchemyBookingRepository,
     SqlAlchemyRoomRepository,
 )
-from app.adapters.tillpoint import TillpointPayments, get_tillpoint
 from app.application.cancel_booking import CancelBooking
 from app.application.confirm_booking import ConfirmBooking
 from app.application.hold_room import HoldRoom, HoldRoomCommand
@@ -33,7 +33,7 @@ from app.domain.errors import (
 router = APIRouter()
 
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
-TillpointDep = Annotated[httpx2.AsyncClient, Depends(get_tillpoint)]
+CoinwrenDep = Annotated[httpx2.AsyncClient, Depends(get_coinwren)]
 
 
 def hold_room_use_case(session: SessionDep) -> HoldRoom:
@@ -45,11 +45,11 @@ def hold_room_use_case(session: SessionDep) -> HoldRoom:
 
 
 def confirm_booking_use_case(
-    session: SessionDep, tillpoint: TillpointDep
+    session: SessionDep, coinwren: CoinwrenDep
 ) -> ConfirmBooking:
     return ConfirmBooking(
         bookings=SqlAlchemyBookingRepository(session),
-        payments=TillpointPayments(tillpoint),
+        payments=CoinwrenPayments(coinwren),
         clock=SystemClock(),
     )
 

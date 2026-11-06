@@ -1,4 +1,4 @@
-"""PaymentGateway over Tillpoint's checkout API (fictional)."""
+"""PaymentGateway over Coinwren's checkout API (fictional)."""
 
 import httpx2
 from pydantic import BaseModel, ValidationError
@@ -13,7 +13,7 @@ class _CheckoutCreated(BaseModel):
     url: str
 
 
-def tillpoint_client(
+def coinwren_client(
     base_url: str, api_key: str, timeout_seconds: float = 5.0
 ) -> httpx2.AsyncClient:
     return httpx2.AsyncClient(
@@ -23,7 +23,7 @@ def tillpoint_client(
     )
 
 
-class TillpointPaymentGateway:
+class CoinwrenPaymentGateway:
     def __init__(self, client: httpx2.AsyncClient) -> None:
         self._client = client
 
@@ -46,6 +46,6 @@ class TillpointPaymentGateway:
             )
         except (httpx2.HTTPError, ValidationError) as error:
             raise PaymentUnavailable(
-                f"Tillpoint: {error}"
+                f"Coinwren: {error}"
             ) from error
         return Checkout(id=created.id, url=created.url)

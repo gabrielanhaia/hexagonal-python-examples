@@ -2,7 +2,7 @@
 
 A booking service for a network of coworking spaces, built as a
 hexagon. Members hold a meeting room for fifteen minutes, pay
-through a payment provider called Tillpoint (fictional), and the
+through a payment provider called Coinwren (fictional), and the
 hold becomes a confirmed booking. This is the service Parts II,
 III and V of the book build.
 

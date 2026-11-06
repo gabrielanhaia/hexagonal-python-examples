@@ -20,8 +20,8 @@ from roombook.adapters.outbound.memory.fakes import (
 from roombook.adapters.outbound.memory.unit_of_work import (
     InMemoryStore,
 )
-from roombook.adapters.outbound.payments.tillpoint import (
-    TillpointPaymentGateway,
+from roombook.adapters.outbound.payments.coinwren import (
+    CoinwrenPaymentGateway,
 )
 from roombook.composition import build_roombook
 from tests.memory_wiring import memory_roombook
@@ -167,17 +167,17 @@ def bad_gateway(request: httpx2.Request) -> httpx2.Response:
 
 
 @pytest.fixture
-def tillpoint_down() -> Iterator[TestClient]:
-    """The real Tillpoint adapter, answering every call with 502."""
+def coinwren_down() -> Iterator[TestClient]:
+    """The real Coinwren adapter, answering every call with 502."""
     room = atlas()
     store = InMemoryStore(rooms={room.id: room})
-    tillpoint = httpx2.AsyncClient(
+    coinwren = httpx2.AsyncClient(
         transport=httpx2.MockTransport(bad_gateway),
-        base_url="https://api.tillpoint.test",
+        base_url="https://api.coinwren.test",
     )
     roombook = build_roombook(
         unit_of_work=store.unit_of_work,
-        payments=TillpointPaymentGateway(tillpoint),
+        payments=CoinwrenPaymentGateway(coinwren),
         notifier=RecordingNotifier(),
         clock=FixedClock(NOW),
         ids=SequentialIds(),
@@ -192,12 +192,12 @@ def tillpoint_down() -> Iterator[TestClient]:
 
 
 def test_a_provider_outage_tells_the_client_nothing_about_it(
-    tillpoint_down: TestClient,
+    coinwren_down: TestClient,
 ) -> None:
     sent = {**ADA, "X-Correlation-ID": "req-43"}
 
     with capture_logs(processors=[merge_contextvars]) as logs:
-        response = tillpoint_down.post(
+        response = coinwren_down.post(
             "/holds", json=TEN_TO_ELEVEN, headers=sent
         )
 
@@ -205,9 +205,9 @@ def test_a_provider_outage_tells_the_client_nothing_about_it(
     problem = response.json()
     assert problem["type"].endswith("/payment-unavailable")
     assert problem["detail"] == OPAQUE_DETAIL
-    for leak in ("tillpoint", "502", "/v1/checkouts"):
+    for leak in ("coinwren", "502", "/v1/checkouts"):
         assert leak not in response.text.lower()
     [failed] = [e for e in logs if e["event"] == "request failed"]
     assert failed["correlation_id"] == "req-43"
     assert failed["log_level"] == "error"
-    assert "api.tillpoint.test" in failed["cause"]
+    assert "api.coinwren.test" in failed["cause"]

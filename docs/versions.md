@@ -57,7 +57,7 @@ or GHCR, GitHub releases, python.org).
 - **psycopg[binary] 3.3.8**: SQLAlchemy 2.1's default PostgreSQL
   driver (`roombook`). Verified 2026-11-06.
 - **httpx2 2.16.0**: the Pydantic-maintained fork of httpx; the
-  Tillpoint client (`ch01`, `ch05`, `ch24/*`, `roombook`) and the
+  Coinwren client (`ch01`, `ch05`, `ch24/*`, `roombook`) and the
   backend of Starlette's `TestClient` in every FastAPI project.
   Verified 2026-11-06.
 

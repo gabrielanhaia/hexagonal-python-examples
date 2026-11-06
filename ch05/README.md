@@ -9,7 +9,7 @@ Chapter 5. One use case, confirming a held booking, written twice.
 - `consumer_defined/`: the core writes the ports it needs, in its
   own words: `BookingRepository.get/save` and
   `PaymentGateway.charge`. The HTTP shape moves into a driven
-  adapter, `consumer_defined/tillpoint.py`.
+  adapter, `consumer_defined/coinwren.py`.
 
 Compare the fakes in `tests/`: the provider-shaped test needs a
 scripted database and a canned HTTP response, and it asserts on

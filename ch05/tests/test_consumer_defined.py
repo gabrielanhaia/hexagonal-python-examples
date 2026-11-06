@@ -5,8 +5,8 @@ from dataclasses import replace
 import httpx2
 import pytest
 
+from consumer_defined.coinwren import CoinwrenPayments
 from consumer_defined.confirm import ConfirmBooking
-from consumer_defined.tillpoint import TillpointPayments
 from model import (
     Booking,
     BookingId,
@@ -56,15 +56,15 @@ async def test_confirm_charges_the_price_once() -> None:
     assert payments.charged == [PRICE]
 
 
-async def test_tillpoint_adapter_turns_a_402_into_a_decline() -> (
+async def test_coinwren_adapter_turns_a_402_into_a_decline() -> (
     None
 ):
     client = httpx2.AsyncClient(
         transport=httpx2.MockTransport(
             lambda request: httpx2.Response(402)
         ),
-        base_url="https://tillpoint.test",
+        base_url="https://coinwren.test",
     )
     async with client:
         with pytest.raises(PaymentDeclined):
-            await TillpointPayments(client).charge("b-1", PRICE)
+            await CoinwrenPayments(client).charge("b-1", PRICE)

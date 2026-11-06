@@ -8,18 +8,18 @@ from app.domain.values import Money
 from app.settings import settings
 
 
-async def get_tillpoint() -> AsyncIterator[httpx2.AsyncClient]:
+async def get_coinwren() -> AsyncIterator[httpx2.AsyncClient]:
     async with httpx2.AsyncClient(
-        base_url=settings.tillpoint_url,
+        base_url=settings.coinwren_url,
         headers={
-            "Authorization": f"Bearer {settings.tillpoint_api_key}"
+            "Authorization": f"Bearer {settings.coinwren_api_key}"
         },
         timeout=10,
     ) as client:
         yield client
 
 
-class TillpointPayments:
+class CoinwrenPayments:
     def __init__(self, client: httpx2.AsyncClient) -> None:
         self._client = client
 

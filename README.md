@@ -45,7 +45,7 @@ docker compose run --rm roombook expire-holds
 # The HTTP API on http://localhost:8000 (OpenAPI at /docs).
 docker compose up roombook-api
 
-# Kafka, the Tillpoint payment consumer and the outbox relay.
+# Kafka, the Coinwren payment consumer and the outbox relay.
 docker compose up roombook-consumer roombook-relay
 ```
 
@@ -72,7 +72,7 @@ docker compose run --rm -w /repo/ch24/step3 examples mypy
 ```
 
 Configuration is by environment variable; copy `.env.example` to
-`.env` to change it. Tillpoint is a fictional payment provider: by
+`.env` to change it. Coinwren is a fictional payment provider: by
 default `ROOMBOOK_PAYMENTS=fake` opens pretend checkouts.
 
 ## Versions

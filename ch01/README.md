@@ -8,7 +8,7 @@ slot rules. Chapter 24 migrates this app to hexagonal, step by
 step, in `ch24/`.
 
 ```text
-app/main.py      routes: hold, confirm (calls Tillpoint), cancel
+app/main.py      routes: hold, confirm (calls Coinwren), cancel
 app/models.py    ORM models; hold expiry and the cancellation fee
 app/schemas.py   Pydantic request and response models
 app/db.py        engine and session, built at import time
@@ -30,7 +30,7 @@ The hold-expiry rule is written twice, once in Python and once in
 SQL. Every test needs the database, and "now" is read from the
 system clock inside the model.
 
-Tillpoint is a fictional payment provider; the default URL uses
+Coinwren is a fictional payment provider; the default URL uses
 the reserved `.example` domain, and the tests replace the client
 with an `httpx2.MockTransport`.
 
@@ -55,8 +55,8 @@ uv run uvicorn app.main:app --port 8000
 
 The service creates `roombook.db` (SQLite) in the working
 directory and seeds one room, `atlas`. Settings come from
-`ROOMBOOK_DATABASE_URL`, `ROOMBOOK_TILLPOINT_URL` and
-`ROOMBOOK_TILLPOINT_API_KEY`.
+`ROOMBOOK_DATABASE_URL`, `ROOMBOOK_COINWREN_URL` and
+`ROOMBOOK_COINWREN_API_KEY`.
 
 ```bash
 curl -s -X POST localhost:8000/rooms/atlas/holds \

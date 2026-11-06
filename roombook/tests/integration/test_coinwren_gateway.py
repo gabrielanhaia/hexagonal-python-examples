@@ -1,4 +1,4 @@
-"""The Tillpoint adapter against a scripted HTTP transport."""
+"""The Coinwren adapter against a scripted HTTP transport."""
 
 import json
 from collections.abc import Callable
@@ -6,8 +6,8 @@ from collections.abc import Callable
 import httpx2
 import pytest
 
-from roombook.adapters.outbound.payments.tillpoint import (
-    TillpointPaymentGateway,
+from roombook.adapters.outbound.payments.coinwren import (
+    CoinwrenPaymentGateway,
 )
 from roombook.application.ports import Checkout, PaymentUnavailable
 from roombook.domain.ids import BookingId
@@ -19,23 +19,23 @@ BOOKING = BookingId("b-1")
 PRICE = Money(4000, "EUR")
 
 
-def gateway(handler: Handler) -> TillpointPaymentGateway:
+def gateway(handler: Handler) -> CoinwrenPaymentGateway:
     client = httpx2.AsyncClient(
         transport=httpx2.MockTransport(handler),
-        base_url="https://api.tillpoint.test",
+        base_url="https://api.coinwren.test",
     )
-    return TillpointPaymentGateway(client)
+    return CoinwrenPaymentGateway(client)
 
 
 async def test_opens_a_checkout_keyed_by_the_booking() -> None:
     seen: list[httpx2.Request] = []
 
-    def tillpoint(request: httpx2.Request) -> httpx2.Response:
+    def coinwren(request: httpx2.Request) -> httpx2.Response:
         seen.append(request)
         body = {"id": "chk_9", "url": "https://pay.test/chk_9"}
         return httpx2.Response(201, json=body)
 
-    checkout = await gateway(tillpoint).start_checkout(
+    checkout = await gateway(coinwren).start_checkout(
         BOOKING, PRICE
     )
 
@@ -65,10 +65,10 @@ def unreachable(request: httpx2.Request) -> httpx2.Response:
 
 
 @pytest.mark.parametrize(
-    "tillpoint", [server_error, wrong_shape, unreachable]
+    "coinwren", [server_error, wrong_shape, unreachable]
 )
 async def test_provider_failures_become_payment_unavailable(
-    tillpoint: Handler,
+    coinwren: Handler,
 ) -> None:
-    with pytest.raises(PaymentUnavailable, match="Tillpoint"):
-        await gateway(tillpoint).start_checkout(BOOKING, PRICE)
+    with pytest.raises(PaymentUnavailable, match="Coinwren"):
+        await gateway(coinwren).start_checkout(BOOKING, PRICE)

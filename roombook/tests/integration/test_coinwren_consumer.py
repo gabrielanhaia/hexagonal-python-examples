@@ -1,15 +1,15 @@
-"""The Tillpoint consumer on FastStream's in-memory Kafka."""
+"""The Coinwren consumer on FastStream's in-memory Kafka."""
 
 from typing import Any
 
 import pytest
 from faststream.kafka import KafkaBroker, TestKafkaBroker
 
-from roombook.adapters.inbound.messaging.tillpoint import (
+from roombook.adapters.inbound.messaging.coinwren import (
     DEAD_LETTER_TOPIC,
     PAYMENTS_TOPIC,
-    TillpointConsumer,
-    tillpoint_router,
+    CoinwrenConsumer,
+    coinwren_router,
 )
 from roombook.adapters.outbound.memory.fakes import (
     FakePaymentGateway,
@@ -51,7 +51,7 @@ class Harness:
             clock=clock,
             ids=SequentialIds(),
         )
-        consumer = TillpointConsumer(
+        consumer = CoinwrenConsumer(
             ConfirmBooking(
                 unit_of_work=self.store.unit_of_work,
                 notifier=self.notifier,
@@ -60,7 +60,7 @@ class Harness:
             InMemoryProcessedMessages(),
         )
         self.broker = KafkaBroker()
-        self.broker.include_router(tillpoint_router(consumer))
+        self.broker.include_router(coinwren_router(consumer))
 
         @self.broker.subscriber(DEAD_LETTER_TOPIC)
         async def dead_letter(body: object) -> None:

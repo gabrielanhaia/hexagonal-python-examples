@@ -32,7 +32,7 @@ class SequentialIds:
 
 
 class FakePaymentGateway:
-    """Opens checkouts on a pretend Tillpoint; charges nothing."""
+    """Opens checkouts on a pretend Coinwren; charges nothing."""
 
     def __init__(self) -> None:
         self.checkouts: dict[BookingId, Money] = {}
@@ -44,7 +44,7 @@ class FakePaymentGateway:
         checkout_id = f"chk_{len(self.checkouts)}"
         return Checkout(
             id=checkout_id,
-            url=f"https://pay.tillpoint.example/{checkout_id}",
+            url=f"https://pay.coinwren.example/{checkout_id}",
         )
 
 

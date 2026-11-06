@@ -5,7 +5,7 @@ The end state:
 ```text
 app/domain/        values, room, booking, errors; stdlib only
 app/application/   HoldRoom, ConfirmBooking, CancelBooking, ports
-app/adapters/      http (routes and wiring), schemas, tillpoint,
+app/adapters/      http (routes and wiring), schemas, coinwren,
                    sqlalchemy/ (records, database, repositories),
                    memory, clock
 app/main.py        the composition root

@@ -5,8 +5,8 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="ROOMBOOK_")
 
     database_url: str = "sqlite+aiosqlite:///./roombook.db"
-    tillpoint_url: str = "https://api.tillpoint.example"
-    tillpoint_api_key: str = ""
+    coinwren_url: str = "https://api.coinwren.example"
+    coinwren_api_key: str = ""
 
 
 settings = Settings()

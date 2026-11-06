@@ -67,7 +67,7 @@ async def test_late_cancellation_costs_half(
     assert response.json()["fee_cents"] == 1200
 
 
-async def test_confirm_charges_tillpoint(
+async def test_confirm_charges_coinwren(
     client: httpx2.AsyncClient, charges: list[httpx2.Request]
 ) -> None:
     held = await client.post(

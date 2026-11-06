@@ -5,7 +5,7 @@ import httpx2
 from model import BookingId, Money, PaymentDeclined, PaymentId
 
 
-class TillpointPayments:
+class CoinwrenPayments:
     def __init__(self, client: httpx2.AsyncClient) -> None:
         self._client = client
 

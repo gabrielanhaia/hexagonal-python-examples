@@ -56,11 +56,11 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 app = FastAPI(title="roombook", lifespan=lifespan)
 
 
-async def get_tillpoint() -> AsyncIterator[httpx2.AsyncClient]:
+async def get_coinwren() -> AsyncIterator[httpx2.AsyncClient]:
     async with httpx2.AsyncClient(
-        base_url=settings.tillpoint_url,
+        base_url=settings.coinwren_url,
         headers={
-            "Authorization": f"Bearer {settings.tillpoint_api_key}"
+            "Authorization": f"Bearer {settings.coinwren_api_key}"
         },
         timeout=10,
     ) as client:
@@ -68,7 +68,7 @@ async def get_tillpoint() -> AsyncIterator[httpx2.AsyncClient]:
 
 
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
-TillpointDep = Annotated[httpx2.AsyncClient, Depends(get_tillpoint)]
+CoinwrenDep = Annotated[httpx2.AsyncClient, Depends(get_coinwren)]
 
 
 def get_hold_room(session: SessionDep) -> HoldRoom:
@@ -127,7 +127,7 @@ async def hold_room(
 
 @app.post("/bookings/{booking_id}/confirm")
 async def confirm_booking(
-    booking_id: str, session: SessionDep, tillpoint: TillpointDep
+    booking_id: str, session: SessionDep, coinwren: CoinwrenDep
 ) -> BookingOut:
     booking = await session.get(BookingRow, booking_id)
     if booking is None:
@@ -138,7 +138,7 @@ async def confirm_booking(
         booking.status = "EXPIRED"
         await session.commit()
         raise HTTPException(409, "Hold expired")
-    response = await tillpoint.post(
+    response = await coinwren.post(
         "/v1/charges",
         json={
             "amount": booking.price_cents,
