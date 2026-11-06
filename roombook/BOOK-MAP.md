@@ -79,7 +79,7 @@ never re-wrap or retype them.
 - `uv_build==0.13.7` as the build backend.
 - Outputs: `ruff.txt`, `ruff-format.txt`.
 
-### 9. Modelling Bookings
+### 9. Modeling Bookings
 
 - `S/domain/booking.py`: `BookingStatus`, `ACTIVE_STATUSES`, the
   `_NEXT` transition table, `Booking.hold/confirm/cancel/expire`,

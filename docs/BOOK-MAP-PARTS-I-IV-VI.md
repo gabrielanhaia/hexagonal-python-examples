@@ -3,18 +3,20 @@
 What to quote, and which recorded output backs each printed
 command. Paths are from the repository root. Every file under
 `docs/outputs/` starts with the command that produced it
-(`$ cd <dir> && <command>`), followed by its real output.
+(`$ docker compose run --rm -w /repo/<dir> examples <command>`),
+followed by its real output, recorded in the pinned image.
 
 Conventions that apply to every recorded output:
 
-- `lint-imports` is recorded as `uv run lint-imports --no-logo`
-  (without the flag it prints an ASCII banner first).
+- `lint-imports` is recorded as `docker compose run --rm -w
+  /repo/<dir> examples lint-imports --no-logo` (without the flag
+  it prints an ASCII banner first).
 - pytest summary lines (`14 passed in 0.06s`) carry wall-clock
   seconds from one run on one laptop. Elide the timing or treat
   it as decoration; no duration in this repo is a measurement.
-- `docs/outputs/ch03/wrong_adapter-runtime.txt` is the only file
-  whose paths were rewritten: the container path became
-  `/path/to/hexagonal-python-examples/`.
+- Tracebacks show container paths (`/repo/ch03/...` in
+  `docs/outputs/ch03/wrong_adapter-runtime.txt`), never a host
+  path.
 
 ## Chapter 1 — `ch01/`
 
