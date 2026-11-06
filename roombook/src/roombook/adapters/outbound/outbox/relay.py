@@ -4,6 +4,7 @@ import asyncio
 from collections.abc import Awaitable, Callable
 from datetime import timedelta
 
+import structlog
 from faststream.kafka import KafkaBroker
 from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
@@ -13,6 +14,8 @@ from roombook.adapters.outbound.sqlalchemy.records import (
 )
 
 type Publish = Callable[[OutboxRecord], Awaitable[None]]
+
+log = structlog.get_logger()
 
 
 def kafka_publisher(broker: KafkaBroker) -> Publish:
@@ -57,6 +60,8 @@ class OutboxRelay:
                 .where(OutboxRecord.id.in_([r.id for r in records]))
                 .values(published_at=func.now())
             )
+        if records:
+            await log.ainfo("outbox relayed", count=len(records))
         return len(records)
 
     async def run(self, *, idle: timedelta) -> None:
