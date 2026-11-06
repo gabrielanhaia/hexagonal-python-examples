@@ -176,3 +176,27 @@ def test_a_cancelled_slot_can_be_held_again(
     )
 
     assert response.status_code == 201
+
+
+def test_rejects_a_booking_longer_than_four_hours(
+    client: TestClient,
+) -> None:
+    response = hold(
+        client, f"{TOMORROW}T10:00:00Z", f"{TOMORROW}T14:15:00Z"
+    )
+
+    assert response.status_code == 422
+
+
+def test_accepts_a_booking_of_exactly_four_hours(
+    client: TestClient,
+) -> None:
+    response = hold(
+        client, f"{TOMORROW}T10:00:00Z", f"{TOMORROW}T14:00:00Z"
+    )
+
+    assert response.status_code == 201
+    assert response.json()["price"] == {
+        "amount": 9600,
+        "currency": "EUR",
+    }
