@@ -62,7 +62,7 @@ bookings = Table(
     Column("room_id", Text, nullable=False),
     Column("member_id", Text, nullable=False),
     Column("slot", TimeSlotType, nullable=False),
-    Column("price", Integer, nullable=False),
+    Column("price", Integer, key="price_amount", nullable=False),
     Column("currency", String(3), nullable=False),
     Column(
         "status",
@@ -81,7 +81,7 @@ def start_mappers() -> None:
         bookings,
         properties={
             "price": composite(
-                Money, bookings.c.price, bookings.c.currency
+                Money, bookings.c.price_amount, bookings.c.currency
             ),
         },
     )
@@ -89,7 +89,8 @@ def start_mappers() -> None:
 
 
 def dispose() -> None:
-    event.remove(Booking, "load", _restore_event_list)
+    if event.contains(Booking, "load", _restore_event_list):
+        event.remove(Booking, "load", _restore_event_list)
     mapper_registry.dispose()
 
 
