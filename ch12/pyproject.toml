@@ -1,0 +1,60 @@
+[project]
+name = "ch12-aggregate-children"
+version = "1.0.0"
+description = "Chapter 12: an aggregate that owns child records."
+requires-python = ">=3.14"
+dependencies = [
+    "aiosqlite==0.22.1",
+    "sqlalchemy[asyncio]==2.1.8",
+]
+
+[dependency-groups]
+dev = [
+    "import-linter==2.16",
+    "mypy==2.4.1",
+    "pytest==9.2.0",
+    "pytest-asyncio==1.4.1.post1",
+    "ruff==0.17.4",
+]
+
+[build-system]
+requires = ["uv_build>=0.13.7,<0.14"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "roombook"
+
+[tool.ruff]
+line-length = 68
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+
+[tool.mypy]
+strict = true
+files = ["src", "tests"]
+
+[tool.pytest]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+asyncio_default_test_loop_scope = "function"
+# The lazy-load trap abandons aiosqlite's cursor coroutine.
+filterwarnings = [
+    "ignore:coroutine 'Connection.cursor' was never awaited",
+]
+
+[tool.importlinter]
+root_package = "roombook"
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "Dependencies point inward"
+type = "layers"
+layers = ["roombook.adapters", "roombook.domain"]
+
+[[tool.importlinter.contracts]]
+name = "The domain imports no SQLAlchemy"
+type = "forbidden"
+source_modules = ["roombook.domain"]
+forbidden_modules = ["sqlalchemy", "aiosqlite"]
