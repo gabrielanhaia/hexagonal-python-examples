@@ -25,7 +25,7 @@ class InMemoryBookingRepository:
     async def add(self, booking: Booking) -> None:
         if await self.overlapping(booking.room_id, booking.slot):
             raise SlotUnavailable(
-                f"room {booking.room_id} is already booked "
+                f"room {booking.room_id} is not free "
                 f"for {booking.slot}"
             )
         self.rows[booking.id] = replace(booking)

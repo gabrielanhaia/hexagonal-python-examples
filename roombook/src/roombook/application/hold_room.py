@@ -49,7 +49,7 @@ class HoldRoom:
                 raise RoomNotFound(f"no room {command.room_id}")
             if await uow.bookings.overlapping(room.id, slot):
                 raise SlotUnavailable(
-                    f"room {room.id} is already booked for {slot}"
+                    f"room {room.id} is not free for {slot}"
                 )
             booking = Booking.hold(
                 booking_id=self.ids.new_booking_id(),

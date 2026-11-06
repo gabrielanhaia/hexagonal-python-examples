@@ -44,7 +44,7 @@ async def test_refuses_a_slot_someone_else_holds(
     hold_room: HoldRoom, store: InMemoryStore
 ) -> None:
     await hold_room(command(ADA))
-    with pytest.raises(SlotUnavailable, match="already booked"):
+    with pytest.raises(SlotUnavailable, match="not free"):
         await hold_room(command(GRACE))
     assert len(store.bookings) == 1
 

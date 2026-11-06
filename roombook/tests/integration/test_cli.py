@@ -42,7 +42,7 @@ async def test_a_taken_slot_exits_with_4(
     code, _ = await roombook_cli(HOLD, HOLD)
 
     assert code == 4
-    assert "already booked" in capsys.readouterr().err
+    assert "not free" in capsys.readouterr().err
 
 
 async def test_availability_lists_free_slots() -> None:

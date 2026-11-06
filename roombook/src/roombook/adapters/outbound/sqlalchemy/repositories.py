@@ -45,7 +45,7 @@ class SqlAlchemyBookingRepository:
         except IntegrityError as error:
             if isinstance(error.orig, ExclusionViolation):
                 raise SlotUnavailable(
-                    f"room {booking.room_id} is already booked "
+                    f"room {booking.room_id} is not free "
                     f"for {booking.slot}"
                 ) from error
             raise

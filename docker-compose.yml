@@ -108,6 +108,7 @@ services:
       - host.docker.internal:host-gateway
     environment:
       TESTCONTAINERS_HOST_OVERRIDE: host.docker.internal
+      UV_COMPILE_BYTECODE: "0"
 
 volumes:
   roombook-venv:

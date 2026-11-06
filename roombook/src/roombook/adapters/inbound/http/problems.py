@@ -40,7 +40,7 @@ PROBLEMS: dict[type[Exception], Problem] = {
         404, "booking-not-found", "No such booking"
     ),
     SlotUnavailable: Problem(
-        409, "slot-unavailable", "Slot already booked"
+        409, "slot-unavailable", "Slot unavailable"
     ),
     IllegalTransition: Problem(
         409, "illegal-transition", "Not allowed in this status"
