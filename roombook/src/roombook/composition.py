@@ -1,6 +1,7 @@
 """The composition root: the one place adapters meet ports."""
 
 import asyncio
+import logging
 from collections.abc import AsyncIterator, Sequence
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
@@ -30,6 +31,7 @@ from roombook.adapters.outbound.notify.console import (
 )
 from roombook.adapters.outbound.notify.smtp import SmtpNotifier
 from roombook.adapters.outbound.observability.logs import (
+    LIBRARY_LOGGER,
     configure_logging,
 )
 from roombook.adapters.outbound.observability.tracing import (
@@ -223,9 +225,12 @@ def run_consumer() -> None:
                 use_cases.confirm_booking,
                 SqlAlchemyProcessedMessages(sessions),
             )
-            broker = KafkaBroker(settings.kafka_servers)
+            logger = logging.getLogger(LIBRARY_LOGGER)
+            broker = KafkaBroker(
+                settings.kafka_servers, logger=logger
+            )
             broker.include_router(tillpoint_router(consumer))
-            await FastStream(broker).run()
+            await FastStream(broker, logger=logger).run()
 
     asyncio.run(consume())
 
@@ -236,7 +241,8 @@ def run_relay() -> None:
     observe(settings)
 
     async def relay() -> None:
-        broker = KafkaBroker(settings.kafka_servers)
+        logger = logging.getLogger(LIBRARY_LOGGER)
+        broker = KafkaBroker(settings.kafka_servers, logger=logger)
         async with database(settings) as sessions, broker:
             outbox = OutboxRelay(sessions, kafka_publisher(broker))
             await outbox.run(idle=timedelta(seconds=1))
