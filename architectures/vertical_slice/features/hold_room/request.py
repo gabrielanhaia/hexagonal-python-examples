@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Self
 
 from pydantic import (
@@ -8,6 +8,8 @@ from pydantic import (
     field_validator,
     model_validator,
 )
+
+MAX_BOOKING_LENGTH = timedelta(hours=4)
 
 
 class HoldRoomRequest(BaseModel):
@@ -32,4 +34,10 @@ class HoldRoomRequest(BaseModel):
     def start_before_end(self) -> Self:
         if self.start >= self.end:
             raise ValueError("start must be before end")
+        return self
+
+    @model_validator(mode="after")
+    def at_most_four_hours(self) -> Self:
+        if self.end - self.start > MAX_BOOKING_LENGTH:
+            raise ValueError("bookings last at most 4 hours")
         return self
