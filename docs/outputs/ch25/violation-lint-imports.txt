@@ -1,0 +1,28 @@
+$ git apply ch25/violation.patch && cd ch25 && uv run lint-imports --no-logo
+
+---------
+Contracts
+---------
+
+Analyzed 28 files, 46 dependencies.
+-----------------------------------
+
+Booking and billing are independent BROKEN
+Each context is a hexagon KEPT
+Cores and contracts import no framework KEPT
+
+Contracts: 2 kept, 1 broken.
+
+
+----------------
+Broken contracts
+----------------
+
+Booking and billing are independent
+-----------------------------------
+
+roombook.billing is not allowed to import roombook.booking:
+
+- roombook.billing.application -> roombook.booking.domain (l.5)
+
+

@@ -1,0 +1,14 @@
+$ cd ch25 && uv run lint-imports --no-logo
+
+---------
+Contracts
+---------
+
+Analyzed 28 files, 45 dependencies.
+-----------------------------------
+
+Booking and billing are independent KEPT
+Each context is a hexagon KEPT
+Cores and contracts import no framework KEPT
+
+Contracts: 3 kept, 0 broken.
