@@ -28,3 +28,7 @@ class RoomNotFound(DomainError):
 
 class BookingNotFound(DomainError):
     pass
+
+
+class BookingTooLong(InvalidBooking):
+    pass

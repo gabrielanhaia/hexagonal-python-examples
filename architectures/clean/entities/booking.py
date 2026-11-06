@@ -3,13 +3,18 @@ from datetime import datetime, timedelta
 from enum import StrEnum
 from fractions import Fraction
 
-from entities.errors import IllegalTransition, OutsideOpeningHours
+from entities.errors import (
+    BookingTooLong,
+    IllegalTransition,
+    OutsideOpeningHours,
+)
 from entities.room import Room, RoomId
 from entities.values import Money, TimeSlot
 
 type BookingId = str
 type MemberId = str
 
+MAX_BOOKING_LENGTH = timedelta(hours=4)
 FREE_CANCELLATION_NOTICE = timedelta(hours=24)
 LATE_CANCELLATION_FEE = Fraction(1, 2)
 
@@ -41,6 +46,8 @@ class Booking:
         member_id: MemberId,
         slot: TimeSlot,
     ) -> Booking:
+        if slot.duration > MAX_BOOKING_LENGTH:
+            raise BookingTooLong("bookings last at most 4 hours")
         if not room.hours.contain(slot):
             raise OutsideOpeningHours(f"{room.name} is closed then")
         return cls(
