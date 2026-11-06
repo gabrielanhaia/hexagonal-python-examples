@@ -138,10 +138,9 @@ async def payment_gateway(
         yield FakePaymentGateway()
         return
     api_key = settings.tillpoint_api_key.get_secret_value()
-    async with tillpoint_client(
-        settings.tillpoint_url, api_key
-    ) as c:
-        yield TillpointPaymentGateway(c)
+    client = tillpoint_client(settings.tillpoint_url, api_key)
+    async with client:
+        yield TillpointPaymentGateway(client)
 
 
 def notifier(settings: Settings) -> Notifier:
