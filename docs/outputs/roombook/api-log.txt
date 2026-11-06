@@ -1,0 +1,14 @@
+$ docker compose logs --no-log-prefix roombook-api
+INFO:     Started server process [1]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-11-06T20:17:55.518117Z [info     ] request                        correlation_id=cf42009e-7b1f-44f1-a099-3a9605120cf5 method=GET path=/openapi.json status=200
+2026-11-06T20:17:55.618294Z [info     ] request                        correlation_id=b05a5872-eae1-4d06-ac04-596d2731c014 method=POST path=/holds status=201
+2026-11-06T20:17:55.658699Z [info     ] request refused                correlation_id=fa023a85-1c1d-4e62-9437-21fee698634d problem=slot-unavailable
+2026-11-06T20:17:55.659033Z [info     ] request                        correlation_id=fa023a85-1c1d-4e62-9437-21fee698634d method=POST path=/holds status=409
+2026-11-06T20:17:55.679314Z [info     ] request refused                correlation_id=fd92f0f9-a71a-4dc9-953f-542f83232707 problem=booking-not-found
+2026-11-06T20:17:55.679691Z [info     ] request                        correlation_id=fd92f0f9-a71a-4dc9-953f-542f83232707 method=POST path=/bookings/01a1b282-bf99-7230-9435-64d7e2d5c452/cancel status=404
+2026-11-06T20:17:55.702917Z [info     ] notification                   correlation_id=89cfa047-9a03-4828-82b2-f3707aa5bd64 member_id=member-ada text='Booking 01a1b282-bf99-7230-9435-64d7e2d5c452 is cancelled; refund EUR 0.00'
+2026-11-06T20:17:55.703188Z [info     ] request                        correlation_id=89cfa047-9a03-4828-82b2-f3707aa5bd64 method=POST path=/bookings/01a1b282-bf99-7230-9435-64d7e2d5c452/cancel status=200
+2026-11-06T20:17:55.722285Z [info     ] request                        correlation_id=e810240d-d8d5-4779-89db-6c30c0980fe4 method=GET path=/rooms/borealis/availability status=200

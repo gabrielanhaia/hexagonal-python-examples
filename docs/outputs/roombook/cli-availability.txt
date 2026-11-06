@@ -1,0 +1,3 @@
+$ docker compose run --rm roombook availability --room atlas --day 2026-12-01
+08:00-10:00 WET
+11:00-20:00 WET

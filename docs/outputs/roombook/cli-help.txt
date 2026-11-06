@@ -1,0 +1,14 @@
+$ docker compose run --rm roombook --help
+usage: roombook [-h] {hold,cancel,availability,expire-holds} ...
+
+Book meeting rooms.
+
+positional arguments:
+  {hold,cancel,availability,expire-holds}
+    hold                hold a room
+    cancel              cancel a booking
+    availability        free slots
+    expire-holds        release stale holds
+
+options:
+  -h, --help            show this help message and exit

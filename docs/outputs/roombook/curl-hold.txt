@@ -1,0 +1,38 @@
+$ curl -si -X POST localhost:8000/holds -H 'Content-Type: application/json' -H 'X-Member-Id: member-ada' -d '{"room_id": "borealis", "start": "2026-12-04T09:00:00Z", "end": "2026-12-04T10:30:00Z"}'
+HTTP/1.1 201 Created
+date: Fri, 06 Nov 2026 20:17:55 GMT
+server: uvicorn
+content-length: 190
+content-type: application/json
+x-correlation-id: b05a5872-eae1-4d06-ac04-596d2731c014
+
+{"booking_id":"01a1b282-bf99-7230-9435-64d7e2d5c452","price":{"amount":3600,"currency":"EUR"},"expires_at":"2026-11-06T20:32:55.609297Z","checkout_url":"https://pay.tillpoint.example/chk_1"}
+$ curl -si -X POST localhost:8000/holds -H 'Content-Type: application/json' -H 'X-Member-Id: member-grace' -d '{"room_id": "borealis", "start": "2026-12-04T10:00:00Z", "end": "2026-12-04T11:00:00Z"}'
+HTTP/1.1 409 Conflict
+date: Fri, 06 Nov 2026 20:17:55 GMT
+server: uvicorn
+content-length: 214
+content-type: application/problem+json
+x-correlation-id: fa023a85-1c1d-4e62-9437-21fee698634d
+
+{"type":"https://roombook.example/problems/slot-unavailable","title":"Slot unavailable","status":409,"detail":"room borealis is not free for 2026-12-04T10:00:00+00:00/2026-12-04T11:00:00+00:00","instance":"/holds"}
+$ curl -si -X POST localhost:8000/bookings/01a1b282-bf99-7230-9435-64d7e2d5c452/cancel -H 'X-Member-Id: member-grace'
+HTTP/1.1 404 Not Found
+date: Fri, 06 Nov 2026 20:17:55 GMT
+server: uvicorn
+content-length: 227
+content-type: application/problem+json
+x-correlation-id: fd92f0f9-a71a-4dc9-953f-542f83232707
+
+{"type":"https://roombook.example/problems/booking-not-found","title":"No such booking","status":404,"detail":"no booking 01a1b282-bf99-7230-9435-64d7e2d5c452","instance":"/bookings/01a1b282-bf99-7230-9435-64d7e2d5c452/cancel"}
+$ curl -si -X POST localhost:8000/bookings/01a1b282-bf99-7230-9435-64d7e2d5c452/cancel -H 'X-Member-Id: member-ada'
+HTTP/1.1 200 OK
+date: Fri, 06 Nov 2026 20:17:55 GMT
+server: uvicorn
+content-length: 76
+content-type: application/json
+x-correlation-id: 89cfa047-9a03-4828-82b2-f3707aa5bd64
+
+{"fee":{"amount":0,"currency":"EUR"},"refund":{"amount":0,"currency":"EUR"}}
+$ curl -s 'localhost:8000/rooms/borealis/availability?day=2026-12-04'
+{"room_id":"borealis","day":"2026-12-04","free":[{"start":"2026-12-04T08:00:00Z","end":"2026-12-04T20:00:00Z"}]}

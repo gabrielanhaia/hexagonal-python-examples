@@ -1,0 +1,2 @@
+$ docker compose run --rm roombook-dev ruff check
+All checks passed!

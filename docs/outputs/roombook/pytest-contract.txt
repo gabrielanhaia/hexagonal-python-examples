@@ -1,0 +1,37 @@
+$ docker compose run --rm roombook-dev pytest tests/contract -v
+============================= test session starts ==============================
+platform linux -- Python 3.14.10, pytest-9.2.0, pluggy-1.7.0 -- /app/.venv/bin/python
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: /app
+configfile: pyproject.toml
+plugins: anyio-4.16.0, hypothesis-6.170.15, asyncio-1.4.1.post1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 24 items
+
+tests/contract/test_unit_of_work.py::test_a_committed_booking_reads_back_unchanged[memory] PASSED [  4%]
+tests/contract/test_unit_of_work.py::test_a_committed_booking_reads_back_unchanged[postgres] PASSED [  8%]
+tests/contract/test_unit_of_work.py::test_an_unknown_id_reads_as_none[memory] PASSED [ 12%]
+tests/contract/test_unit_of_work.py::test_an_unknown_id_reads_as_none[postgres] PASSED [ 16%]
+tests/contract/test_unit_of_work.py::test_nothing_persists_without_commit[memory] PASSED [ 20%]
+tests/contract/test_unit_of_work.py::test_nothing_persists_without_commit[postgres] PASSED [ 25%]
+tests/contract/test_unit_of_work.py::test_save_persists_a_transition[memory] PASSED [ 29%]
+tests/contract/test_unit_of_work.py::test_save_persists_a_transition[postgres] PASSED [ 33%]
+tests/contract/test_unit_of_work.py::test_a_change_without_save_is_not_persisted[memory] PASSED [ 37%]
+tests/contract/test_unit_of_work.py::test_a_change_without_save_is_not_persisted[postgres] PASSED [ 41%]
+tests/contract/test_unit_of_work.py::test_overlapping_finds_only_active_bookings_that_overlap[memory] PASSED [ 45%]
+tests/contract/test_unit_of_work.py::test_overlapping_finds_only_active_bookings_that_overlap[postgres] PASSED [ 50%]
+tests/contract/test_unit_of_work.py::test_an_overlapping_active_booking_is_refused[memory] PASSED [ 54%]
+tests/contract/test_unit_of_work.py::test_an_overlapping_active_booking_is_refused[postgres] PASSED [ 58%]
+tests/contract/test_unit_of_work.py::test_a_cancelled_booking_frees_its_slot[memory] PASSED [ 62%]
+tests/contract/test_unit_of_work.py::test_a_cancelled_booking_frees_its_slot[postgres] PASSED [ 66%]
+tests/contract/test_unit_of_work.py::test_stale_holds_are_the_ones_15_minutes_old[memory] PASSED [ 70%]
+tests/contract/test_unit_of_work.py::test_stale_holds_are_the_ones_15_minutes_old[postgres] PASSED [ 75%]
+tests/contract/test_unit_of_work.py::test_rooms_read_back_by_id[memory] PASSED [ 79%]
+tests/contract/test_unit_of_work.py::test_rooms_read_back_by_id[postgres] PASSED [ 83%]
+tests/contract/test_unit_of_work.py::test_outbox_events_commit_with_the_booking[memory] PASSED [ 87%]
+tests/contract/test_unit_of_work.py::test_outbox_events_commit_with_the_booking[postgres] PASSED [ 91%]
+tests/contract/test_unit_of_work.py::test_a_processed_message_is_remembered_once[memory] PASSED [ 95%]
+tests/contract/test_unit_of_work.py::test_a_processed_message_is_remembered_once[postgres] PASSED [100%]
+
+============================== 24 passed in 4.69s ==============================
