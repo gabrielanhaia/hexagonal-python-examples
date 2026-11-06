@@ -110,5 +110,20 @@ services:
       TESTCONTAINERS_HOST_OVERRIDE: host.docker.internal
       UV_COMPILE_BYTECODE: "0"
 
+  # Every other project (chNN/, architectures/) runs here:
+  # docker compose run --rm -w /repo/ch24/step1 examples pytest -q
+  examples:
+    image: ghcr.io/astral-sh/uv:0.13.7-python3.14-trixie-slim
+    profiles: ["dev"]
+    working_dir: /repo
+    entrypoint: ["uv", "run", "--locked", "--quiet"]
+    volumes:
+      - .:/repo
+      - uv-cache:/root/.cache/uv
+    environment:
+      UV_PROJECT_ENVIRONMENT: /tmp/venv
+      UV_LINK_MODE: copy
+
 volumes:
   roombook-venv:
+  uv-cache:

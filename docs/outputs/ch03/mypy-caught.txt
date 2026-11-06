@@ -1,4 +1,4 @@
-$ cd ch03 && uv run mypy wrong_adapter.py
+$ docker compose run --rm -w /repo/ch03 examples mypy wrong_adapter.py
 wrong_adapter.py:20: error: Argument 2 to "cancellation_is_free" has incompatible type "TextClock"; expected "Clock"  [arg-type]
 wrong_adapter.py:20: note: Following member(s) of "TextClock" have conflicts:
 wrong_adapter.py:20: note:     Expected:
@@ -6,3 +6,4 @@ wrong_adapter.py:20: note:         def now(self) -> datetime
 wrong_adapter.py:20: note:     Got:
 wrong_adapter.py:20: note:         def now(self) -> str
 Found 1 error in 1 file (checked 1 source file)
+

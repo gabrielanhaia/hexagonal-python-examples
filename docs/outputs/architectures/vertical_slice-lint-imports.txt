@@ -1,4 +1,4 @@
-$ cd architectures/vertical_slice && uv run lint-imports --no-logo
+$ docker compose run --rm -w /repo/architectures/vertical_slice examples lint-imports --no-logo
 
 ---------
 Contracts

@@ -55,6 +55,16 @@ docker compose run --rm roombook-dev ruff check
 docker compose run --rm roombook-dev lint-imports
 ```
 
+Every other project (`chNN/`, `architectures/`) runs in the
+`examples` service: point it at the project directory with `-w`.
+
+```bash
+docker compose run --rm -w /repo/ch01 examples pytest -q
+docker compose run --rm -w /repo/architectures/clean examples \
+    lint-imports --no-logo
+docker compose run --rm -w /repo/ch24/step3 examples mypy
+```
+
 Configuration is by environment variable; copy `.env.example` to
 `.env` to change it. Tillpoint is a fictional payment provider: by
 default `ROOMBOOK_PAYMENTS=fake` opens pretend checkouts.

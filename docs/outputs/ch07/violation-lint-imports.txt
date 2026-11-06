@@ -1,4 +1,4 @@
-$ cd ch07/violation && uv run lint-imports --no-logo
+$ docker compose run --rm -w /repo/ch07/violation examples lint-imports --no-logo
 
 ---------
 Contracts
@@ -23,5 +23,6 @@ The domain imports no framework
 roombook.domain is not allowed to import sqlalchemy:
 
 -   roombook.domain.booking -> sqlalchemy (l.3, l.4)
+
 
 

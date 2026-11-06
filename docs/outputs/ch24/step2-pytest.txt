@@ -1,3 +1,3 @@
-$ cd ch24/step2 && uv run pytest -q
+$ docker compose run --rm -w /repo/ch24/step2 examples pytest -q
 ..........................                                               [100%]
-26 passed in 0.61s
+26 passed in 0.78s

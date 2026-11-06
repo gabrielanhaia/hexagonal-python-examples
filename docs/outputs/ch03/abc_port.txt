@@ -1,3 +1,3 @@
-$ cd ch03 && uv run python abc_port.py
+$ docker compose run --rm -w /repo/ch03 examples python abc_port.py
 free: True
 TypeError: Can't instantiate abstract class ForgetfulClock without an implementation for abstract method 'now'

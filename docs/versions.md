@@ -64,11 +64,16 @@ or GHCR, GitHub releases, python.org).
 ## Messaging, DI, observability (`roombook`)
 
 - **faststream[kafka] 0.7.8**. Verified 2026-11-06.
-- **aiokafka 0.15.0** (via FastStream). Verified 2026-11-06.
+- **aiokafka 0.14.0** (via FastStream). 0.15.0 is out, but
+  FastStream 0.7.8 requires `aiokafka<0.15`. Verified 2026-11-06.
 - **dishka 1.10.1**. Verified 2026-11-06.
-- **opentelemetry-api / -sdk 1.45.2**,
-  **opentelemetry-instrumentation-sqlalchemy 0.66b2** and
-  **opentelemetry-instrumentation-fastapi 0.66b2**. Verified
+- **opentelemetry-api / -sdk 1.45.2** and
+  **opentelemetry-instrumentation-sqlalchemy 0.66b2**. The
+  SQLAlchemy instrumentation declares support below 2.1 only;
+  roombook skips its version check and a Postgres test proves
+  spans are produced. No FastAPI instrumentation package:
+  FastAPI 0.162 traces natively once a tracer provider exists,
+  and adding it would record every request twice. Verified
   2026-11-06.
 - **structlog 26.1.0**. Verified 2026-11-06.
 
@@ -109,3 +114,13 @@ Pinned to the current major version of each action.
 Re-check every entry before a new edition of the book, after a
 major release of FastAPI, SQLAlchemy or Pydantic, or six months
 after the last date above, whichever comes first.
+
+## Container images
+
+- **python:3.14.10-slim-trixie** (roombook runtime) and
+  **ghcr.io/astral-sh/uv:0.13.7** (uv copied into it).
+- **ghcr.io/astral-sh/uv:0.13.7-python3.14-trixie-slim**: the
+  `examples` Compose service that runs every other project.
+- **postgres:18.6-trixie** and **apache/kafka:4.4.0** (KRaft).
+
+All verified to exist on their registries 2026-11-06.

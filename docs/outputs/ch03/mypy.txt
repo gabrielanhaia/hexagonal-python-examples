@@ -1,2 +1,2 @@
-$ cd ch03 && uv run mypy
+$ docker compose run --rm -w /repo/ch03 examples mypy
 Success: no issues found in 4 source files

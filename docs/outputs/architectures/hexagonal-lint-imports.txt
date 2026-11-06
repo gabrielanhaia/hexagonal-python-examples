@@ -1,4 +1,4 @@
-$ cd architectures/hexagonal && uv run lint-imports --no-logo
+$ docker compose run --rm -w /repo/architectures/hexagonal examples lint-imports --no-logo
 
 ---------
 Contracts

@@ -1,4 +1,4 @@
-$ cd architectures/onion && uv run lint-imports --no-logo
+$ docker compose run --rm -w /repo/architectures/onion examples lint-imports --no-logo
 
 ---------
 Contracts

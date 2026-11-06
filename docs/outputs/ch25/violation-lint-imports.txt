@@ -1,4 +1,4 @@
-$ git apply ch25/violation.patch && cd ch25 && uv run lint-imports --no-logo
+$ git apply ch25/violation.patch && docker compose run --rm -w /repo/ch25 examples lint-imports --no-logo
 
 ---------
 Contracts
@@ -24,5 +24,6 @@ Booking and billing are independent
 roombook.billing is not allowed to import roombook.booking:
 
 - roombook.billing.application -> roombook.booking.domain (l.5)
+
 
 
