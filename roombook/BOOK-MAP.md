@@ -158,6 +158,13 @@ never re-wrap or retype them.
   `type_annotation_map`, `BookingRecord` with `TSTZRANGE` and
   `ExcludeConstraint`), `mappers.py` (`booking_to_record`,
   `booking_from_record`, `update_record`, `slot_to_range`).
+- An aggregate that owns children is in `ch12/`, not here:
+  `Room` and its `BlackoutPeriod`s (`ch12/src/roombook/domain/
+  room.py`), `RoomRecord.blackouts` as a `relationship()` with
+  `delete-orphan`, `to_domain` / `to_record` / `reconcile` in
+  `mappers.py`, `SqlAlchemyRoomRepository` loading with
+  `selectinload`, and `tests/test_lazy_loading.py` for the
+  `MissingGreenlet` trap.
 - Repositories: `S/adapters/outbound/sqlalchemy/repositories.py`
   (`select()` + `scalars`, `Range.overlaps`, `get(...,
   with_for_update=True)`, `stale_holds` with
