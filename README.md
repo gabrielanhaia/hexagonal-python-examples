@@ -21,7 +21,7 @@ it (see `docs/outputs/`).
 |---|---|
 | `roombook/` | The booking service the book builds: a hexagon with FastAPI, CLI and Kafka driving adapters, SQLAlchemy 2.1 + PostgreSQL 18 driven adapters, a transactional outbox and OpenTelemetry. Parts II, III and V. |
 | `architectures/` | Part IV: the same feature built five ways (layered, hexagonal, onion, clean, vertical slice) for comparison. |
-| `chNN/` | Chapter-specific snapshots whose code differs from `roombook/` (`ch01`, `ch03`, `ch05`, `ch07`, `ch24`, `ch25`). Each has its own README. |
+| `chNN/` | Chapter-specific snapshots whose code differs from `roombook/` (`ch01`, `ch03`, `ch05`, `ch07`, `ch12`, `ch24`, `ch25`). Each has its own README. |
 | `docs/` | `versions.md` (every pin), `troubleshooting.md`, `outputs/` (recorded command output). |
 
 Each top-level project is independent: its own `pyproject.toml`
@@ -70,6 +70,11 @@ docker compose run --rm -w /repo/architectures/clean examples \
     lint-imports --no-logo
 docker compose run --rm -w /repo/ch24/step3 examples mypy
 ```
+
+One command runs on the host instead, because it reads this
+repository's git history and the `examples` image has no git:
+`python3 architectures/measure.py`, from the root of a clone. It
+needs Python 3 and git, nothing else.
 
 Configuration is by environment variable; copy `.env.example` to
 `.env` to change it. Coinwren is a fictional payment provider: by

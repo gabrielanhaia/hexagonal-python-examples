@@ -8,8 +8,8 @@ because their code differs from the finished service.
 
 1. **The Framework Ate the Business** — `ch01/`, the
    framework-shaped app (rules in routes and ORM models).
-2. **Five Architectures, One Question** — no listing of its own;
-   the five shapes it sketches are built in `architectures/`.
+2. **Five Architectures, One Question** — `architectures/`: the
+   five shapes it sketches, quoted from there.
 3. **Python Without a Compiler to Stop You** — `ch03/`: Protocol
    and ABC ports, the `runtime_checkable` trap, mypy catching a
    structural error.
@@ -31,7 +31,7 @@ because their code differs from the finished service.
 
 8. **A Layout That Tells the Truth** — `roombook/` (tree,
    `pyproject.toml`).
-9. **Modelling Bookings** — `roombook/src/roombook/domain/`.
+9. **Modeling Bookings** — `roombook/src/roombook/domain/`.
 10. **Use Cases and Application Services** —
     `roombook/src/roombook/application/`.
 11. **Driving Adapters: HTTP, CLI and a Consumer** —
@@ -39,7 +39,10 @@ because their code differs from the finished service.
     `messaging/`, `jobs/`).
 12. **Driven Adapters: SQLAlchemy 2 Without Letting It In** —
     `roombook/src/roombook/adapters/outbound/sqlalchemy/`,
-    `.../outbound/payments/`, `roombook/migrations/`.
+    `.../outbound/payments/`, `roombook/migrations/`; `ch12/` for
+    an aggregate that owns child records (`Room` and its
+    `BlackoutPeriod`s: `selectinload`, the async lazy-load trap,
+    reconciling children on save).
 13. **Wiring: the Composition Root** —
     `roombook/src/roombook/composition.py`.
 
@@ -71,7 +74,9 @@ because their code differs from the finished service.
 
 ## Part VI — Evolution
 
-23. **When Not to Do Any of This** — no code.
+23. **When Not to Do Any of This** — `roombook/` and
+    `architectures/vertical_slice/`: the port-count argument
+    quoted from the repo.
 24. **Migrating a Framework-Shaped App** — `ch24/step1/` to
     `ch24/step5/`, starting from `ch01/`.
 25. **From One Hexagon to Many** — `ch25/` and

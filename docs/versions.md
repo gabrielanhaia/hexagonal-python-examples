@@ -44,13 +44,13 @@ or GHCR, GitHub releases, python.org).
 - **uvicorn 0.54.0**: the ASGI server (`ch01`, `ch24/*`,
   `roombook`). Verified 2026-11-06.
 - **sqlalchemy[asyncio] 2.1.8**: persistence (`architectures/
-  layered`, `ch01`, `ch07/*`, `ch24/*`, `roombook`). The
+  layered`, `ch01`, `ch07/*`, `ch12`, `ch24/*`, `roombook`). The
   `asyncio` extra brings greenlet, which 2.1 no longer installs
   by default. Verified 2026-11-06.
 - **aiosqlite 0.22.1**: async SQLite driver for the SQLite-backed
-  projects (`architectures/layered`, `ch01`, `ch24/*`). Not in the
-  book's main lock; added so those projects need no Postgres.
-  Released 2025-12-23, still the latest on PyPI. Verified
+  projects (`architectures/layered`, `ch01`, `ch12`, `ch24/*`).
+  Not in the book's main lock; added so those projects need no
+  Postgres. Released 2025-12-23, still the latest on PyPI. Verified
   2026-11-06.
 - **alembic 1.20.1**: migrations (`roombook`). Verified
   2026-11-06.
