@@ -1,0 +1,112 @@
+[project]
+name = "roombook"
+version = "1.0.0"
+description = "Meeting-room bookings, built as a hexagon."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.14"
+dependencies = [
+    "alembic==1.20.1",
+    "dishka==1.10.1",
+    "fastapi==0.162.0",
+    "faststream[kafka]==0.7.8",
+    "httpx2==2.16.0",
+    "opentelemetry-api==1.45.2",
+    "opentelemetry-instrumentation-sqlalchemy==0.66b2",
+    "opentelemetry-sdk==1.45.2",
+    "psycopg[binary]==3.3.8",
+    "pydantic==2.14.3",
+    "pydantic-settings==2.16.2",
+    "sqlalchemy[asyncio]==2.1.8",
+    "starlette==1.10.0",
+    "structlog==26.1.0",
+    "uvicorn==0.54.0",
+]
+
+[project.scripts]
+roombook = "roombook.composition:main"
+roombook-consumer = "roombook.composition:run_consumer"
+roombook-relay = "roombook.composition:run_relay"
+
+[dependency-groups]
+dev = [
+    "hypothesis==6.170.15",
+    "import-linter==2.16",
+    "mypy==2.4.1",
+    "pytest==9.2.0",
+    "pytest-asyncio==1.4.1.post1",
+    "ruff==0.17.4",
+    "testcontainers==4.15.0",
+]
+
+[build-system]
+requires = ["uv_build==0.13.7"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 68
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "ASYNC", "B", "DTZ", "E", "F", "I", "N", "PIE",
+    "PT", "RET", "RUF", "SIM", "UP", "W",
+]
+# Errors carry the ubiquitous language: SlotUnavailable, not
+# SlotUnavailableError.
+ignore = ["N818"]
+
+[tool.mypy]
+strict = true
+files = ["src", "tests", "migrations"]
+
+[tool.pytest]
+testpaths = ["tests"]
+addopts = ["--import-mode=importlib", "--strict-markers"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+asyncio_default_test_loop_scope = "function"
+markers = ["postgres: starts PostgreSQL 18 in Docker"]
+
+[tool.importlinter]
+root_package = "roombook"
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "Dependencies point inward"
+type = "layers"
+layers = [
+    "roombook.composition_dishka",
+    "roombook.composition",
+    "roombook.settings",
+    "roombook.adapters",
+    "roombook.application",
+    "roombook.domain",
+]
+
+[[tool.importlinter.contracts]]
+name = "The core imports no framework"
+type = "forbidden"
+source_modules = ["roombook.domain", "roombook.application"]
+forbidden_modules = [
+    "alembic",
+    "dishka",
+    "fastapi",
+    "faststream",
+    "httpx2",
+    "opentelemetry",
+    "psycopg",
+    "pydantic",
+    "pydantic_settings",
+    "sqlalchemy",
+    "starlette",
+    "structlog",
+]
+
+[[tool.importlinter.contracts]]
+name = "Driving and driven adapters stay apart"
+type = "independence"
+modules = [
+    "roombook.adapters.inbound",
+    "roombook.adapters.outbound",
+]
