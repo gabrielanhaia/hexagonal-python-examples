@@ -1,0 +1,13 @@
+$ cd ch24/step5 && uv run lint-imports --no-logo
+
+---------
+Contracts
+---------
+
+Analyzed 37 files, 85 dependencies.
+-----------------------------------
+
+Dependencies point inward KEPT
+The core imports no framework and no settings KEPT
+
+Contracts: 2 kept, 0 broken.

@@ -1,0 +1,9 @@
+$ git diff --no-index --stat=68 ch24/step2/app ch24/step3/app
+ .../step3/app/adapters/__init__.py          |  0
+ .../step3/app/adapters/memory.py            | 39 +++++++
+ .../app/adapters/sqlalchemy_repository.py   | 92 +++++++++++++++++
+ .../step3/app/application/__init__.py       |  0
+ .../step3/app/application/ports.py          | 32 ++++++
+ ch24/{step2 => step3}/app/domain/booking.py | 83 ++++++++++++++-
+ ch24/{step2 => step3}/app/domain/errors.py  | 24 +++++
+ 7 files changed, 269 insertions(+), 1 deletion(-)

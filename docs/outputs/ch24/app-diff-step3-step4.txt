@@ -1,0 +1,5 @@
+$ git diff --no-index --stat=68 ch24/step3/app ch24/step4/app
+ .../step4/app/adapters/clock.py             |   6 +
+ .../step4/app/application/hold_room.py      |  53 ++++++++
+ ch24/{step3 => step4}/app/main.py           | 110 ++++++++--------
+ 3 files changed, 116 insertions(+), 53 deletions(-)

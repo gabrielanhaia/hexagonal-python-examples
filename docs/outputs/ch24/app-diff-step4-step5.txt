@@ -1,0 +1,17 @@
+$ git diff --no-index --stat=68 ch24/step4/app ch24/step5/app
+ .../null => ch24/step5/app/adapters/http.py | 131 +++++++++++++
+ .../step5/app/adapters/schemas.py           |  42 ++++
+ .../app/adapters/sqlalchemy/__init__.py     |   0
+ .../app/adapters/sqlalchemy/database.py}    |   0
+ .../app/adapters/sqlalchemy/records.py}     |   0
+ .../adapters/sqlalchemy/repositories.py}    |   2 +-
+ .../step5/app/adapters/tillpoint.py         |  40 ++++
+ .../step5/app/application/cancel_booking.py |  28 +++
+ .../app/application/confirm_booking.py      |  36 ++++
+ .../app/application/hold_room.py            |   2 +-
+ .../app/application/ports.py                |  13 +-
+ ch24/{step4 => step5}/app/domain/booking.py |   3 +
+ ch24/{step4 => step5}/app/domain/errors.py  |   4 +
+ ch24/{step4 => step5}/app/main.py           | 159 +---------------
+ ch24/step4/app/schemas.py => /dev/null      |  49 -----
+ 15 files changed, 306 insertions(+), 203 deletions(-)

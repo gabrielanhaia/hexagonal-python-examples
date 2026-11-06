@@ -1,0 +1,9 @@
+$ git diff --no-index --stat=68 ch24/step1/app ch24/step2/app
+ .../step2/app/domain/__init__.py            |  0
+ .../step2/app/domain/booking.py             | 25 +++++
+ .../null => ch24/step2/app/domain/errors.py |  6 ++
+ /dev/null => ch24/step2/app/domain/room.py  | 34 +++++++
+ .../null => ch24/step2/app/domain/values.py | 46 +++++++++
+ ch24/{step1 => step2}/app/main.py           | 90 +++++++++++------
+ ch24/{step1 => step2}/app/models.py         | 26 +----
+ 7 files changed, 173 insertions(+), 54 deletions(-)
