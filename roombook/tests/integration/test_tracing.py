@@ -1,10 +1,17 @@
-"""The tracing decorators record spans; the ports never know."""
+"""Spans from the adapters; the domain never knows."""
 
+from collections.abc import Iterator
+
+import pytest
+from opentelemetry.instrumentation.sqlalchemy import (
+    SQLAlchemyInstrumentor,
+)
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import SimpleSpanProcessor
 from opentelemetry.sdk.trace.export.in_memory_span_exporter import (
     InMemorySpanExporter,
 )
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from roombook.adapters.outbound.memory.fakes import (
     FakePaymentGateway,
@@ -13,8 +20,12 @@ from roombook.adapters.outbound.memory.fakes import (
 from roombook.adapters.outbound.observability.tracing import (
     TracedNotifier,
     TracedPaymentGateway,
+    instrument_engine,
 )
-from roombook.domain.ids import BookingId
+from roombook.adapters.outbound.sqlalchemy.unit_of_work import (
+    SqlAlchemyUnitOfWork,
+)
+from roombook.domain.ids import BookingId, RoomId
 from roombook.domain.money import Money
 
 
@@ -50,3 +61,26 @@ async def test_the_wrapped_notifier_still_delivers() -> None:
     [span] = spans.get_finished_spans()
     assert span.name == "Notifier.notify"
     assert inner.sent == []
+
+
+@pytest.fixture
+def uninstrumented() -> Iterator[None]:
+    """The instrumentor is a process-wide singleton: reset it."""
+    SQLAlchemyInstrumentor().uninstrument()
+    yield
+    SQLAlchemyInstrumentor().uninstrument()
+
+
+@pytest.mark.postgres
+@pytest.mark.usefixtures("uninstrumented")
+async def test_sqlalchemy_2_1_statements_are_traced(
+    sessions: async_sessionmaker[AsyncSession],
+) -> None:
+    provider, spans = tracer_and_spans()
+    instrument_engine(sessions.kw["bind"], provider)
+
+    async with SqlAlchemyUnitOfWork(sessions) as uow:
+        await uow.rooms.get(RoomId("atlas"))
+
+    names = [span.name for span in spans.get_finished_spans()]
+    assert names == ["connect", "SELECT"]

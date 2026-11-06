@@ -38,8 +38,20 @@ def configure_tracing(*, to_console: bool) -> TracerProvider:
     return provider
 
 
-def instrument_engine(engine: AsyncEngine) -> None:
-    SQLAlchemyInstrumentor().instrument(engine=engine.sync_engine)
+def instrument_engine(
+    engine: AsyncEngine, provider: TracerProvider | None = None
+) -> None:
+    """Trace every statement the engine runs.
+
+    The 0.66b2 instrumentor declares sqlalchemy < 2.1, yet its
+    hooks work on 2.1 (tests/integration/test_tracing.py), so
+    the stale version check is skipped, not the spans.
+    """
+    SQLAlchemyInstrumentor().instrument(
+        engine=engine.sync_engine,
+        tracer_provider=provider,
+        skip_dep_check=True,
+    )
 
 
 class TracedPaymentGateway:
