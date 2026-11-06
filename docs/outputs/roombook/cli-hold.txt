@@ -1,5 +1,5 @@
 $ docker compose run --rm roombook hold --room atlas --member member-ada --start 2026-12-01T10:00+00:00 --end 2026-12-01T11:00+00:00
-held     01a1b27e-16a5-7401-aab6-9b818170227f
+held     01a1b2d7-9b00-7720-ba5b-a3727ac11e51
 price    EUR 40.00
-expires  20:27 UTC
-pay at   https://pay.tillpoint.example/chk_1
+expires  22:05 UTC
+pay at   https://pay.coinwren.example/chk_1

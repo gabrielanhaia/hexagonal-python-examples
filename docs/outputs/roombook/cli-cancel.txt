@@ -1,10 +1,10 @@
 $ docker compose run --rm roombook hold --room cove --member member-ada --start 2026-12-01T14:00+00:00 --end 2026-12-01T15:00+00:00
-held     01a1b27e-6bf9-72c1-8403-9636d12f08e4
+held     01a1b2d7-cdc4-72fa-b96e-884783f6bd00
 price    EUR 60.00
-expires  20:28 UTC
-pay at   https://pay.tillpoint.example/chk_1
-$ docker compose run --rm roombook cancel 01a1b27e-6bf9-72c1-8403-9636d12f08e4 --member member-ada
-2026-11-06T20:13:16.556624Z [info     ] notification                   member_id=member-ada text='Booking 01a1b27e-6bf9-72c1-8403-9636d12f08e4 is cancelled; refund EUR 0.00'
-cancelled 01a1b27e-6bf9-72c1-8403-9636d12f08e4
+expires  22:05 UTC
+pay at   https://pay.coinwren.example/chk_1
+$ docker compose run --rm roombook cancel 01a1b2d7-cdc4-72fa-b96e-884783f6bd00 --member member-ada
+2026-11-06T21:50:52.393334Z [info     ] notification                   member_id=member-ada text='Booking 01a1b2d7-cdc4-72fa-b96e-884783f6bd00 is cancelled; refund EUR 0.00'
+cancelled 01a1b2d7-cdc4-72fa-b96e-884783f6bd00
 fee       EUR 0.00
 refund    EUR 0.00

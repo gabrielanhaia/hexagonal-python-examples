@@ -1,19 +1,19 @@
 $ curl -s -X POST localhost:8000/holds -H 'Content-Type: application/json' -H 'X-Member-Id: member-ada' -d '{"room_id": "borealis", "start": "2026-12-03T09:00:00Z", "end": "2026-12-03T10:00:00Z"}'
-{"booking_id":"01a1b280-c81a-7443-8b8e-17beaa97d468","price":{"amount":2400,"currency":"EUR"},"expires_at":"2026-11-06T20:30:46.715003Z","checkout_url":"https://pay.tillpoint.example/chk_1"}
-$ printf '%s\n%s\n' '{"id": "evt_1001", "type": "payment.succeeded", "data": {"payment_id": "pay_77", "reference": "01a1b280-c81a-7443-8b8e-17beaa97d468"}}' '{"id": "evt_1001", "type": "payment.succeeded", "data": {"payment_id": "pay_77", "reference": "01a1b280-c81a-7443-8b8e-17beaa97d468"}}' | docker compose exec -T kafka /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic tillpoint.payments
+{"booking_id":"01a1b2d8-2f5b-7627-9d0f-30ff5911f76f","price":{"amount":2400,"currency":"EUR"},"expires_at":"2026-11-06T22:06:14.779711Z","checkout_url":"https://pay.coinwren.example/chk_1"}
+$ printf '%s\n%s\n' '{"id": "evt_1001", "type": "payment.succeeded", "data": {"payment_id": "pay_77", "reference": "01a1b2d8-2f5b-7627-9d0f-30ff5911f76f"}}' '{"id": "evt_1001", "type": "payment.succeeded", "data": {"payment_id": "pay_77", "reference": "01a1b2d8-2f5b-7627-9d0f-30ff5911f76f"}}' | docker compose exec -T kafka /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic coinwren.payments
 
 $ docker compose logs --no-log-prefix --since 30s roombook-consumer
-2026-11-06 20:15:29,615 INFO FastStream app starting...
-2026-11-06 20:15:29,643 INFO `OnPaymentEvent` waiting for messages
-2026-11-06 20:15:29,676 INFO Consumer faststream-0.7.8-9b7c7dbd-c93c-42f6-b263-ba7daf2bf7f5 assigned to partitions: (TopicPartition(topic='tillpoint.payments', partition=0))
-2026-11-06 20:15:29,676 INFO FastStream app started successfully! To exit, press CTRL+C
-2026-11-06 20:15:48,220 INFO Received
-2026-11-06T20:15:48.306024Z [info     ] notification                   member_id=member-ada text='Booking 01a1b280-c81a-7443-8b8e-17beaa97d468 is confirmed'
-2026-11-06T20:15:48.312927Z [info     ] payment applied                event_id=evt_1001
-2026-11-06 20:15:48,313 INFO Processed
-2026-11-06 20:15:48,362 INFO Received
-2026-11-06T20:15:48.367202Z [info     ] duplicate skipped              event_id=evt_1001
-2026-11-06 20:15:48,367 INFO Processed
+2026-11-06 21:51:14,596 INFO FastStream app starting...
+2026-11-06 21:51:14,605 INFO `OnPaymentEvent` waiting for messages
+2026-11-06 21:51:14,616 INFO Consumer faststream-0.7.8-ffd9cf79-b7cb-4c1f-8561-8e5cc35475bd assigned to partitions: (TopicPartition(topic='coinwren.payments', partition=0))
+2026-11-06 21:51:14,616 INFO FastStream app started successfully! To exit, press CTRL+C
+2026-11-06 21:51:17,855 INFO Received
+2026-11-06T21:51:17.882018Z [info     ] notification                   member_id=member-ada text='Booking 01a1b2d8-2f5b-7627-9d0f-30ff5911f76f is confirmed'
+2026-11-06T21:51:17.885980Z [info     ] payment applied                event_id=evt_1001
+2026-11-06 21:51:17,886 INFO Processed
+2026-11-06 21:51:17,898 INFO Received
+2026-11-06T21:51:17.899958Z [info     ] duplicate skipped              event_id=evt_1001
+2026-11-06 21:51:17,900 INFO Processed
 
 $ docker compose run --rm roombook availability --room borealis --day 2026-12-03
 08:00-09:00 WET

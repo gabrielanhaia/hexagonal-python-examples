@@ -3,12 +3,12 @@ INFO:     Started server process [1]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
-2026-11-06T20:17:55.518117Z [info     ] request                        correlation_id=cf42009e-7b1f-44f1-a099-3a9605120cf5 method=GET path=/openapi.json status=200
-2026-11-06T20:17:55.618294Z [info     ] request                        correlation_id=b05a5872-eae1-4d06-ac04-596d2731c014 method=POST path=/holds status=201
-2026-11-06T20:17:55.658699Z [info     ] request refused                correlation_id=fa023a85-1c1d-4e62-9437-21fee698634d problem=slot-unavailable
-2026-11-06T20:17:55.659033Z [info     ] request                        correlation_id=fa023a85-1c1d-4e62-9437-21fee698634d method=POST path=/holds status=409
-2026-11-06T20:17:55.679314Z [info     ] request refused                correlation_id=fd92f0f9-a71a-4dc9-953f-542f83232707 problem=booking-not-found
-2026-11-06T20:17:55.679691Z [info     ] request                        correlation_id=fd92f0f9-a71a-4dc9-953f-542f83232707 method=POST path=/bookings/01a1b282-bf99-7230-9435-64d7e2d5c452/cancel status=404
-2026-11-06T20:17:55.702917Z [info     ] notification                   correlation_id=89cfa047-9a03-4828-82b2-f3707aa5bd64 member_id=member-ada text='Booking 01a1b282-bf99-7230-9435-64d7e2d5c452 is cancelled; refund EUR 0.00'
-2026-11-06T20:17:55.703188Z [info     ] request                        correlation_id=89cfa047-9a03-4828-82b2-f3707aa5bd64 method=POST path=/bookings/01a1b282-bf99-7230-9435-64d7e2d5c452/cancel status=200
-2026-11-06T20:17:55.722285Z [info     ] request                        correlation_id=e810240d-d8d5-4779-89db-6c30c0980fe4 method=GET path=/rooms/borealis/availability status=200
+2026-11-06T21:51:29.235786Z [info     ] request                        correlation_id=ed94bc28-ecb9-4109-aac6-6603403dd85d method=GET path=/openapi.json status=200
+2026-11-06T21:51:29.305992Z [info     ] request                        correlation_id=06ed54c4-27e0-430f-aede-1bc2634fac94 method=POST path=/holds status=201
+2026-11-06T21:51:29.329829Z [info     ] request refused                correlation_id=29ae0df4-f19d-4a06-995e-15f40853d1bf problem=slot-unavailable
+2026-11-06T21:51:29.330078Z [info     ] request                        correlation_id=29ae0df4-f19d-4a06-995e-15f40853d1bf method=POST path=/holds status=409
+2026-11-06T21:51:29.349816Z [info     ] request refused                correlation_id=08413595-64b3-4f36-8019-a9e00f4c0a3f problem=booking-not-found
+2026-11-06T21:51:29.350070Z [info     ] request                        correlation_id=08413595-64b3-4f36-8019-a9e00f4c0a3f method=POST path=/bookings/01a1b2d8-6813-768e-913c-6e392086f2bf/cancel status=404
+2026-11-06T21:51:29.372960Z [info     ] notification                   correlation_id=35a5e5ca-35e1-4406-a30b-ed369f2074ec member_id=member-ada text='Booking 01a1b2d8-6813-768e-913c-6e392086f2bf is cancelled; refund EUR 0.00'
+2026-11-06T21:51:29.373213Z [info     ] request                        correlation_id=35a5e5ca-35e1-4406-a30b-ed369f2074ec method=POST path=/bookings/01a1b2d8-6813-768e-913c-6e392086f2bf/cancel status=200
+2026-11-06T21:51:29.392960Z [info     ] request                        correlation_id=0d9d8228-ac68-4ef9-b2fb-50b06eb40b76 method=GET path=/rooms/borealis/availability status=200

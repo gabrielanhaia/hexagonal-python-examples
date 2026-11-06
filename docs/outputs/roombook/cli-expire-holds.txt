@@ -1,4 +1,4 @@
 $ docker compose run --rm roombook expire-holds
-2026-11-06T20:28:37.087571Z [info     ] notification                   member_id=member-ada text='Hold 01a1b27e-16a5-7401-aab6-9b818170227f has expired'
-2026-11-06T20:28:37.087820Z [info     ] holds expired                  count=1
+2026-11-06T22:07:20.343980Z [info     ] notification                   member_id=member-ada text='Hold 01a1b2d7-9b00-7720-ba5b-a3727ac11e51 has expired'
+2026-11-06T22:07:20.344298Z [info     ] holds expired                  count=1
 expired 1 hold(s)
