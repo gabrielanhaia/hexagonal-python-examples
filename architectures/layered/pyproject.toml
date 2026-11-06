@@ -1,0 +1,45 @@
+[project]
+name = "arch-layered"
+version = "1.0.0"
+description = "Hold and cancel a room: layered architecture."
+requires-python = ">=3.14"
+dependencies = [
+    "aiosqlite==0.22.1",
+    "fastapi==0.162.0",
+    "pydantic==2.14.3",
+    "sqlalchemy[asyncio]==2.1.8",
+]
+
+[dependency-groups]
+dev = [
+    "httpx2==2.16.0",
+    "import-linter==2.16",
+    "mypy==2.4.1",
+    "pytest==9.2.0",
+    "ruff==0.17.4",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 68
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+
+[tool.mypy]
+strict = true
+files = ["presentation", "services", "data_access", "tests"]
+
+[tool.pytest]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.importlinter]
+root_packages = ["presentation", "services", "data_access"]
+
+[[tool.importlinter.contracts]]
+name = "Each layer calls only the layers below it"
+type = "layers"
+layers = ["presentation", "services", "data_access"]
