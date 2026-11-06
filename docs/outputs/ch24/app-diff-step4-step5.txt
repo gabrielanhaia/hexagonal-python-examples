@@ -1,11 +1,11 @@
 $ git diff --no-index --stat=68 ch24/step4/app ch24/step5/app
+ .../step5/app/adapters/coinwren.py          |  40 ++++
  .../null => ch24/step5/app/adapters/http.py | 131 +++++++++++++
  .../step5/app/adapters/schemas.py           |  42 ++++
  .../app/adapters/sqlalchemy/__init__.py     |   0
  .../app/adapters/sqlalchemy/database.py}    |   0
  .../app/adapters/sqlalchemy/records.py}     |   0
  .../adapters/sqlalchemy/repositories.py}    |   2 +-
- .../step5/app/adapters/tillpoint.py         |  40 ++++
  .../step5/app/application/cancel_booking.py |  28 +++
  .../app/application/confirm_booking.py      |  36 ++++
  .../app/application/hold_room.py            |   2 +-
