@@ -18,6 +18,18 @@ inside the core. The slot rules moved out of the Pydantic schema
 into `TimeSlot`. The repository commits on `save`; the Unit of Work
 is chapter 19's subject.
 
+From the repo root, in the `examples` Compose service:
+
+```bash
+docker compose run --rm -w /repo/ch24/step5 examples pytest -q
+docker compose run --rm -w /repo/ch24/step5 examples \
+    lint-imports --no-logo
+docker compose run --rm -w /repo/ch24/step5 -p 8000:8000 examples \
+    uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+With uv on the host instead, from this directory:
+
 ```bash
 uv sync --locked
 uv run pytest -q

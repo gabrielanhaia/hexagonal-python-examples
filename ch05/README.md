@@ -15,6 +15,15 @@ Compare the fakes in `tests/`: the provider-shaped test needs a
 scripted database and a canned HTTP response, and it asserts on
 SQL text. The consumer-defined fakes are a dict and a list.
 
+From the repo root, in the `examples` Compose service:
+
+```bash
+docker compose run --rm -w /repo/ch05 examples pytest -q
+docker compose run --rm -w /repo/ch05 examples mypy
+```
+
+With uv on the host instead:
+
 ```bash
 cd ch05
 uv sync --locked

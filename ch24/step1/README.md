@@ -7,6 +7,14 @@ the awkward parts (an expired hold is written as `EXPIRED` when
 someone tries to confirm it). The same file runs unchanged in
 every later step.
 
+From the repo root, in the `examples` Compose service:
+
+```bash
+docker compose run --rm -w /repo/ch24/step1 examples pytest -q
+```
+
+With uv on the host instead, from this directory:
+
 ```bash
 uv sync --locked && uv run pytest -q
 ```

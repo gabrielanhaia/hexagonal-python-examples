@@ -15,6 +15,17 @@ mypy is clean; only `lint-imports` notices.
 `adapters/sqlalchemy/records.py`, with `to_domain` and
 `to_record` mapping between the two.
 
+From the repo root, in the `examples` Compose service:
+
+```bash
+docker compose run --rm -w /repo/ch07/violation examples \
+    lint-imports --no-logo   # exits 1: one contract broken
+docker compose run --rm -w /repo/ch07/fixed examples \
+    lint-imports --no-logo   # exits 0
+```
+
+With uv on the host instead:
+
 ```bash
 cd ch07/violation
 uv sync --locked

@@ -21,6 +21,17 @@ to `domain_model` (an outer ring may use any inner ring), and a
 `forbidden` contract that keeps web frameworks out of the three
 core rings.
 
+From the repo root, in the `examples` Compose service:
+
+```bash
+docker compose run --rm -w /repo/architectures/onion examples \
+    pytest -q
+docker compose run --rm -w /repo/architectures/onion examples \
+    lint-imports
+```
+
+With uv on the host instead, from this directory:
+
 ```bash
 uv sync --locked && uv run pytest -q && uv run lint-imports
 ```

@@ -67,22 +67,22 @@ encodes that architecture's own rule:
 
 ## Run
 
-From a variant's directory:
+From the repo root, in the `examples` Compose service (swap
+`clean` for any variant):
+
+```bash
+docker compose run --rm -w /repo/architectures/clean examples pytest -q
+docker compose run --rm -w /repo/architectures/clean examples lint-imports
+docker compose run --rm -w /repo/architectures/clean examples mypy
+```
+
+With uv on the host instead, from a variant's directory:
 
 ```bash
 uv sync --locked
 uv run pytest -q
 uv run lint-imports
 uv run mypy
-```
-
-Without a local uv, with Docker only (from the repo root):
-
-```bash
-docker run --rm -v "$PWD":/w -w /w/architectures/clean \
-  -e UV_PROJECT_ENVIRONMENT=/tmp/venv \
-  ghcr.io/astral-sh/uv:0.13.7-python3.14-trixie-slim \
-  sh -c "uv sync --locked && uv run pytest -q"
 ```
 
 ## Measure

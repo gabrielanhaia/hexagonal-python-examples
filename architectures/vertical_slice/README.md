@@ -22,6 +22,17 @@ Contracts (`pyproject.toml`): an `independence` contract between
 the two slices, and a `layers` contract, app -> features ->
 kernel.
 
+From the repo root, in the `examples` Compose service:
+
+```bash
+docker compose run --rm -w /repo/architectures/vertical_slice examples \
+    pytest -q
+docker compose run --rm -w /repo/architectures/vertical_slice examples \
+    lint-imports
+```
+
+With uv on the host instead, from this directory:
+
 ```bash
 uv sync --locked && uv run pytest -q && uv run lint-imports
 ```

@@ -20,6 +20,17 @@ Database: in-memory SQLite through aiosqlite. `UTCDateTime`
 in `data_access/models.py` exists because SQLite stores no
 timezones.
 
+From the repo root, in the `examples` Compose service:
+
+```bash
+docker compose run --rm -w /repo/architectures/layered examples \
+    pytest -q
+docker compose run --rm -w /repo/architectures/layered examples \
+    lint-imports
+```
+
+With uv on the host instead, from this directory:
+
 ```bash
 uv sync --locked && uv run pytest -q && uv run lint-imports
 ```

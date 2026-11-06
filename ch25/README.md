@@ -33,16 +33,29 @@ not.
 
 ```bash
 git apply ch25/violation.patch
-cd ch25
-uv run pytest -q                 # passes
-uv run lint-imports --no-logo    # independence BROKEN, exit 1
-cd ..
+docker compose run --rm -w /repo/ch25 examples pytest -q
+docker compose run --rm -w /repo/ch25 examples \
+    lint-imports --no-logo       # independence BROKEN, exit 1
 git apply -R ch25/violation.patch
 ```
+
+With uv on the host, replace the two `docker compose` lines with
+`uv run pytest -q` and `uv run lint-imports --no-logo`, run from
+`ch25/`.
 
 Recorded output: `docs/outputs/ch25/`.
 
 ## Run
+
+From the repo root, in the `examples` Compose service:
+
+```bash
+docker compose run --rm -w /repo/ch25 examples pytest -q
+docker compose run --rm -w /repo/ch25 examples \
+    lint-imports --no-logo
+```
+
+With uv on the host instead:
 
 ```bash
 cd ch25

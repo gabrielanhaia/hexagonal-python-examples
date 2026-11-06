@@ -30,11 +30,19 @@ blocking" to the SQL. Step 2 derives both from one function,
 
 ## Run any step
 
+From the repo root, in the `examples` Compose service:
+
+```bash
+docker compose run --rm -w /repo/ch24/step3 examples pytest -q
+```
+
+With uv on the host instead:
+
 ```bash
 cd ch24/step3
 uv sync --locked
 uv run pytest -q
 ```
 
-Step 5 also runs `uv run lint-imports --no-logo`. Recorded
+Step 5 also runs `lint-imports --no-logo`. Recorded
 output for every step: `docs/outputs/ch24/`.

@@ -36,6 +36,16 @@ with an `httpx2.MockTransport`.
 
 ## Run
 
+From the repo root, in the `examples` Compose service:
+
+```bash
+docker compose run --rm -w /repo/ch01 examples pytest -q
+docker compose run --rm -w /repo/ch01 -p 8000:8000 examples \
+    uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+With uv on the host instead:
+
 ```bash
 cd ch01
 uv sync --locked

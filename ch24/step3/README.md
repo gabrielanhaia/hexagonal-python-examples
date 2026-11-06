@@ -8,6 +8,14 @@ in `app/application/ports.py` (`RoomRepository`,
 both. The routes do not use any of it yet: the seam exists before
 anything crosses it.
 
+From the repo root, in the `examples` Compose service:
+
+```bash
+docker compose run --rm -w /repo/ch24/step3 examples pytest -q
+```
+
+With uv on the host instead, from this directory:
+
 ```bash
 uv sync --locked && uv run pytest -q
 ```

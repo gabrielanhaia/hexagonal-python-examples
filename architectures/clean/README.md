@@ -22,6 +22,17 @@ frameworks -> interface_adapters -> use_cases -> entities, and a
 `forbidden` contract that keeps fastapi, pydantic and starlette
 out of everything but `frameworks/`.
 
+From the repo root, in the `examples` Compose service:
+
+```bash
+docker compose run --rm -w /repo/architectures/clean examples \
+    pytest -q
+docker compose run --rm -w /repo/architectures/clean examples \
+    lint-imports
+```
+
+With uv on the host instead, from this directory:
+
 ```bash
 uv sync --locked && uv run pytest -q && uv run lint-imports
 ```

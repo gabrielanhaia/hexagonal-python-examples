@@ -14,6 +14,27 @@ rejected.
 - `wrong_adapter.py`: the same wrong clock passed to a `Clock`
   parameter. mypy rejects it; Python only fails at runtime.
 
+From the repo root, in the `examples` Compose service:
+
+```bash
+docker compose run --rm -w /repo/ch03 examples \
+    python protocol_port.py
+docker compose run --rm -w /repo/ch03 examples \
+    python abc_port.py
+docker compose run --rm -w /repo/ch03 examples \
+    python runtime_checkable_trap.py
+docker compose run --rm -w /repo/ch03 examples \
+    mypy                    # clean: wrong_adapter.py excluded
+docker compose run --rm -w /repo/ch03 examples \
+    mypy wrong_adapter.py   # fails, on purpose
+docker compose run --rm -w /repo/ch03 examples \
+    python wrong_adapter.py # fails later, at runtime
+docker compose run --rm -w /repo/ch03 examples \
+    pytest -q
+```
+
+With uv on the host instead:
+
 ```bash
 cd ch03
 uv sync --locked

@@ -7,6 +7,14 @@ New: `app/domain/` (`values.py`, `room.py`, `booking.py`,
 call the domain instead. The hold-expiry rule now has one source,
 `hold_cutoff`, used by both the Python check and the SQL query.
 
+From the repo root, in the `examples` Compose service:
+
+```bash
+docker compose run --rm -w /repo/ch24/step2 examples pytest -q
+```
+
+With uv on the host instead, from this directory:
+
 ```bash
 uv sync --locked && uv run pytest -q
 ```
