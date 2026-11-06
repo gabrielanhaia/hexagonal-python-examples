@@ -1,4 +1,4 @@
 $ docker compose run --rm roombook-dev pytest -m "not postgres" -q
 ........................................................................ [ 72%]
 ............................                                             [100%]
-100 passed, 17 deselected in 0.85s
+100 passed, 17 deselected in 1.09s

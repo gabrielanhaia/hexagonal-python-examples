@@ -14,7 +14,7 @@ $ docker compose run --rm roombook-dev lint-imports
 Contracts
 ---------
 
-Analyzed 86 files, 277 dependencies.
+Analyzed 87 files, 279 dependencies.
 ------------------------------------
 
 Dependencies point inward KEPT

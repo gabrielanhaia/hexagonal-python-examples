@@ -11,4 +11,4 @@ collecting ... collected 1 item
 
 tests/integration/test_double_booking.py::test_the_exclusion_constraint_wins_the_race PASSED [100%]
 
-============================== 1 passed in 3.18s ===============================
+============================== 1 passed in 3.34s ===============================

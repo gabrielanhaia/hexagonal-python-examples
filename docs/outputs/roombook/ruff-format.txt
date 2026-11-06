@@ -1,2 +1,2 @@
 $ docker compose run --rm roombook-dev ruff format --check
-99 files already formatted
+100 files already formatted

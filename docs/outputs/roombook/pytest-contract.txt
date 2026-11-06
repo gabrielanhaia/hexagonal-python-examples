@@ -34,4 +34,4 @@ tests/contract/test_unit_of_work.py::test_outbox_events_commit_with_the_booking[
 tests/contract/test_unit_of_work.py::test_a_processed_message_is_remembered_once[memory] PASSED [ 95%]
 tests/contract/test_unit_of_work.py::test_a_processed_message_is_remembered_once[postgres] PASSED [100%]
 
-============================== 24 passed in 4.69s ==============================
+============================== 24 passed in 3.40s ==============================
