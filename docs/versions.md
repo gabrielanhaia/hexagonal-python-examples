@@ -102,7 +102,7 @@ Pinned to the current major version of each action.
 
 - **actions/checkout@v7** (latest release v7.0.1). Verified
   2026-11-06.
-- **astral-sh/setup-uv@v10** (latest release v10.3.3); installs
+- **astral-sh/setup-uv@v10.3.3** (exact tag: setup-uv publishes no moving `v10` tag); installs
   uv 0.13.7 in the `pinned` job and the newest uv in `latest`.
   Verified 2026-11-06.
 - **actions/github-script@v9** (latest release v9.0.0); opens the
