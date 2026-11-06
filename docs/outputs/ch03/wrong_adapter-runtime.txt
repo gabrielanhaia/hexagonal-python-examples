@@ -1,0 +1,9 @@
+$ cd ch03 && uv run python wrong_adapter.py
+Traceback (most recent call last):
+  File "/path/to/hexagonal-python-examples/ch03/wrong_adapter.py", line 20, in <module>
+    cancellation_is_free(start, TextClock())
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/path/to/hexagonal-python-examples/ch03/protocol_port.py", line 27, in cancellation_is_free
+    return start - clock.now() >= FREE_CANCELLATION_NOTICE
+           ~~~~~~^~~~~~~~~~~~~
+TypeError: unsupported operand type(s) for -: 'datetime.datetime' and 'str'

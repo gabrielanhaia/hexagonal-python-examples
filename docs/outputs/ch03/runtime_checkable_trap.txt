@@ -1,0 +1,4 @@
+$ cd ch03 && uv run python runtime_checkable_trap.py
+TextClock passes isinstance: True
+NoClock passes isinstance: False
+AttributeError: 'str' object has no attribute 'isoformat'

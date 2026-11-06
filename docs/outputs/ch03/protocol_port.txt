@@ -1,0 +1,3 @@
+$ cd ch03 && uv run python protocol_port.py
+free: True
+Clock in FixedClock's bases: False
