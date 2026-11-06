@@ -7,6 +7,7 @@ from data_access.bookings import BookingDAO
 from data_access.models import ACTIVE, Booking, BookingStatus, Room
 from services.errors import (
     BookingNotFound,
+    BookingTooLong,
     IllegalTransition,
     InvalidTimeSlot,
     OutsideOpeningHours,
@@ -14,6 +15,7 @@ from services.errors import (
     SlotUnavailable,
 )
 
+MAX_BOOKING_LENGTH = timedelta(hours=4)
 FREE_CANCELLATION_NOTICE = timedelta(hours=24)
 
 
@@ -46,6 +48,8 @@ class BookingService:
         end: datetime,
     ) -> Booking:
         check_slot(start, end)
+        if end - start > MAX_BOOKING_LENGTH:
+            raise BookingTooLong("bookings last at most 4 hours")
         room = await self._dao.get_room(room_id)
         if room is None:
             raise RoomNotFound(room_id)
