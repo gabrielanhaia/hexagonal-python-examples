@@ -3,12 +3,29 @@
 from collections.abc import AsyncIterator, Iterator
 from contextlib import asynccontextmanager
 
+import httpx2
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from structlog.contextvars import merge_contextvars
+from structlog.testing import capture_logs
 
 from roombook.adapters.inbound.http.app import State, create_app
+from roombook.adapters.inbound.http.problems import OPAQUE_DETAIL
+from roombook.adapters.outbound.memory.fakes import (
+    FixedClock,
+    RecordingNotifier,
+    SequentialIds,
+)
+from roombook.adapters.outbound.memory.unit_of_work import (
+    InMemoryStore,
+)
+from roombook.adapters.outbound.payments.tillpoint import (
+    TillpointPaymentGateway,
+)
+from roombook.composition import build_roombook
 from tests.memory_wiring import memory_roombook
+from tests.support import NOW, atlas
 
 ADA = {"X-Member-Id": "member-ada"}
 GRACE = {"X-Member-Id": "member-grace"}
@@ -131,3 +148,66 @@ def test_every_response_carries_a_correlation_id(
     )
 
     assert response.headers["X-Correlation-ID"] == "req-42"
+
+
+def test_a_refusal_keeps_the_rule_s_own_sentence(
+    client: TestClient,
+) -> None:
+    response = client.post(
+        "/holds",
+        json={**TEN_TO_ELEVEN, "room_id": "nowhere"},
+        headers=ADA,
+    )
+
+    assert response.json()["detail"] == "no room nowhere"
+
+
+def bad_gateway(request: httpx2.Request) -> httpx2.Response:
+    return httpx2.Response(502)
+
+
+@pytest.fixture
+def tillpoint_down() -> Iterator[TestClient]:
+    """The real Tillpoint adapter, answering every call with 502."""
+    room = atlas()
+    store = InMemoryStore(rooms={room.id: room})
+    tillpoint = httpx2.AsyncClient(
+        transport=httpx2.MockTransport(bad_gateway),
+        base_url="https://api.tillpoint.test",
+    )
+    roombook = build_roombook(
+        unit_of_work=store.unit_of_work,
+        payments=TillpointPaymentGateway(tillpoint),
+        notifier=RecordingNotifier(),
+        clock=FixedClock(NOW),
+        ids=SequentialIds(),
+    )
+
+    @asynccontextmanager
+    async def lifespan(app: FastAPI) -> AsyncIterator[State]:
+        yield {"use_cases": roombook}
+
+    with TestClient(create_app(lifespan)) as test_client:
+        yield test_client
+
+
+def test_a_provider_outage_tells_the_client_nothing_about_it(
+    tillpoint_down: TestClient,
+) -> None:
+    sent = {**ADA, "X-Correlation-ID": "req-43"}
+
+    with capture_logs(processors=[merge_contextvars]) as logs:
+        response = tillpoint_down.post(
+            "/holds", json=TEN_TO_ELEVEN, headers=sent
+        )
+
+    assert response.status_code == 503
+    problem = response.json()
+    assert problem["type"].endswith("/payment-unavailable")
+    assert problem["detail"] == OPAQUE_DETAIL
+    for leak in ("tillpoint", "502", "/v1/checkouts"):
+        assert leak not in response.text.lower()
+    [failed] = [e for e in logs if e["event"] == "request failed"]
+    assert failed["correlation_id"] == "req-43"
+    assert failed["log_level"] == "error"
+    assert "api.tillpoint.test" in failed["cause"]
