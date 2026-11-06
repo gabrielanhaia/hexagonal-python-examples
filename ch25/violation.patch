@@ -1,0 +1,37 @@
+diff --git a/ch25/src/roombook/billing/application.py b/ch25/src/roombook/billing/application.py
+index 071c094..a6dafd3 100644
+--- a/ch25/src/roombook/billing/application.py
++++ b/ch25/src/roombook/billing/application.py
+@@ -2,6 +2,7 @@ from typing import Protocol
+ from uuid import uuid4
+ 
+ from roombook.billing.domain import Invoice
++from roombook.booking.domain import LATE_CANCELLATION_FEE
+ from roombook.contracts.events import BookingCancelled
+ 
+ 
+@@ -33,7 +34,10 @@ class IssueCancellationInvoice:
+                 booking_id=event.booking_id,
+                 amount=event.fee_amount,
+                 currency=event.currency,
+-                reason="late cancellation",
++                reason=(
++                    "late cancellation,"
++                    f" {LATE_CANCELLATION_FEE:.0%} of the price"
++                ),
+             )
+         )
+ 
+diff --git a/ch25/tests/test_monolith.py b/ch25/tests/test_monolith.py
+index bb654ac..1c1b245 100644
+--- a/ch25/tests/test_monolith.py
++++ b/ch25/tests/test_monolith.py
+@@ -30,7 +30,7 @@ def test_a_late_cancellation_is_invoiced(
+             "booking_id": booking_id,
+             "amount": 1200,
+             "currency": "EUR",
+-            "reason": "late cancellation",
++            "reason": "late cancellation, 50% of the price",
+         }
+     ]
+ 
