@@ -1,0 +1,37 @@
+$ python3 architectures/measure.py
+variant          files  lines  classes  protos  tests  touched
+layered             11    339       21       0     14        3
+hexagonal           15    364       29       3     14        3
+onion               17    381       28       3     14        3
+clean               18    536       40       7     14        3
+vertical_slice      19    261       14       0     14        2
+
+files, lines, classes, protos: production code only
+(tests/ excluded); lines are non-blank, non-comment.
+touched: files changed by the max-length rule commit.
+
+layered:
+  services/booking_service.py
+  services/errors.py
+  tests/test_scenarios.py
+
+hexagonal:
+  domain/booking.py
+  domain/errors.py
+  tests/test_scenarios.py
+
+onion:
+  domain_model/booking.py
+  domain_model/errors.py
+  tests/test_scenarios.py
+
+clean:
+  entities/booking.py
+  entities/errors.py
+  tests/test_scenarios.py
+
+vertical_slice:
+  features/hold_room/request.py
+  tests/test_scenarios.py
+
+tests/test_scenarios.py identical in all five (sha256 e8b537dacbf5)

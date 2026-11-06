@@ -1,0 +1,13 @@
+$ cd architectures/vertical_slice && uv run lint-imports --no-logo
+
+---------
+Contracts
+---------
+
+Analyzed 19 files, 27 dependencies.
+-----------------------------------
+
+Slices do not know each other KEPT
+The shared kernel serves the slices KEPT
+
+Contracts: 2 kept, 0 broken.

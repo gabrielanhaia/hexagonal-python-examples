@@ -1,0 +1,13 @@
+$ cd architectures/hexagonal && uv run lint-imports --no-logo
+
+---------
+Contracts
+---------
+
+Analyzed 25 files, 58 dependencies.
+-----------------------------------
+
+Dependencies point inward KEPT
+The core imports no framework KEPT
+
+Contracts: 2 kept, 0 broken.

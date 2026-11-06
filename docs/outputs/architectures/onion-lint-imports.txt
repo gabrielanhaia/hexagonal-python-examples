@@ -1,0 +1,13 @@
+$ cd architectures/onion && uv run lint-imports --no-logo
+
+---------
+Contracts
+---------
+
+Analyzed 27 files, 59 dependencies.
+-----------------------------------
+
+Coupling points toward the centre KEPT
+The application core imports no framework KEPT
+
+Contracts: 2 kept, 0 broken.

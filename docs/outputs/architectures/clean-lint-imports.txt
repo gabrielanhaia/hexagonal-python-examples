@@ -1,0 +1,13 @@
+$ cd architectures/clean && uv run lint-imports --no-logo
+
+---------
+Contracts
+---------
+
+Analyzed 28 files, 70 dependencies.
+-----------------------------------
+
+The Dependency Rule: source code points inward KEPT
+Only the outer circle knows the web framework KEPT
+
+Contracts: 2 kept, 0 broken.
