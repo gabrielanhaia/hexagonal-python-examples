@@ -1,0 +1,13 @@
+$ docker compose run --rm -w /repo/ch12 examples lint-imports --no-logo
+
+---------
+Contracts
+---------
+
+Analyzed 15 files, 17 dependencies.
+-----------------------------------
+
+Dependencies point inward KEPT
+The domain imports no SQLAlchemy KEPT
+
+Contracts: 2 kept, 0 broken.
