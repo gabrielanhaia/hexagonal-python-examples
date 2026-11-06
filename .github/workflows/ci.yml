@@ -1,0 +1,198 @@
+# Every directory with a pyproject.toml is an independent project.
+# pinned: the exact versions in uv.lock; must pass.
+# latest: every pin lifted to the newest release; may fail, and a
+#         failure outside a pull request opens an issue.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "17 6 * * 1" # Mondays, 06:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  UV_VERSION: "0.13.7"
+
+jobs:
+  discover:
+    runs-on: ubuntu-24.04
+    outputs:
+      projects: ${{ steps.find.outputs.projects }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: find
+        name: Find projects
+        run: |
+          projects=$(git ls-files '*pyproject.toml' \
+            | xargs -r -n1 dirname | sort \
+            | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "projects=$projects" >> "$GITHUB_OUTPUT"
+          echo "$projects"
+
+  pinned:
+    needs: discover
+    if: needs.discover.outputs.projects != '[]'
+    name: pinned ${{ matrix.project }} (${{ matrix.python }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        project: ${{ fromJSON(needs.discover.outputs.projects) }}
+        python: ["3.14.10", "3.15.2"]
+    defaults:
+      run:
+        working-directory: ${{ matrix.project }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
+        with:
+          version: ${{ env.UV_VERSION }}
+          python-version: ${{ matrix.python }}
+          enable-cache: true
+          cache-dependency-glob: ${{ matrix.project }}/uv.lock
+      - name: Install the locked versions
+        run: uv sync --locked
+      - name: ruff format
+        run: uv run ruff format --check .
+      - name: ruff check
+        run: uv run ruff check .
+      - name: mypy
+        run: uv run mypy
+      - name: import-linter
+        run: |
+          mode=$(python3 - <<'PY'
+          import tomllib
+          with open("pyproject.toml", "rb") as f:
+              tool = tomllib.load(f).get("tool", {})
+          if "importlinter" not in tool:
+              print("skip")
+          else:
+              companion = tool.get("companion", {})
+              print(companion.get("lint-imports", "must-pass"))
+          PY
+          )
+          case "$mode" in
+            skip)
+              echo "No import-linter contracts in this project." ;;
+            must-fail)
+              if uv run lint-imports --no-logo; then
+                echo "::error::Expected a broken contract here."
+                exit 1
+              fi
+              echo "Contract broken, as this project intends." ;;
+            *)
+              uv run lint-imports --no-logo ;;
+          esac
+      - name: pytest
+        # Tests marked `postgres` start postgres:18.6-trixie
+        # through testcontainers, on the runner's Docker.
+        run: uv run pytest -q
+
+  latest:
+    needs: discover
+    if: needs.discover.outputs.projects != '[]'
+    name: latest ${{ matrix.project }}
+    runs-on: ubuntu-24.04
+    continue-on-error: true
+    permissions:
+      contents: read
+      issues: write
+    strategy:
+      fail-fast: false
+      matrix:
+        project: ${{ fromJSON(needs.discover.outputs.projects) }}
+    defaults:
+      run:
+        working-directory: ${{ matrix.project }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
+        with:
+          python-version: "3.15"
+      - name: Lift every exact pin and re-resolve
+        run: |
+          sed -i -E 's/"([^"]+)==([^"]+)"/"\1>=\2"/' pyproject.toml
+          uv lock --upgrade
+          git diff --stat
+      - name: Install
+        run: uv sync
+      - name: ruff check
+        run: uv run ruff check .
+      - name: mypy
+        run: uv run mypy
+      - name: import-linter
+        run: |
+          if grep -q 'lint-imports = "must-fail"' pyproject.toml
+          then
+            if uv run lint-imports --no-logo; then exit 1; fi
+          elif grep -q '^\[tool.importlinter\]' pyproject.toml
+          then
+            uv run lint-imports --no-logo
+          fi
+      - name: pytest
+        run: uv run pytest -q
+      - name: Open an issue
+        if: failure() && github.event_name != 'pull_request'
+        uses: actions/github-script@v9
+        env:
+          PROJECT: ${{ matrix.project }}
+        with:
+          script: |
+            const title =
+              `Latest versions break ${process.env.PROJECT}`;
+            const open = await github.paginate(
+              github.rest.issues.listForRepo,
+              { ...context.repo, state: "open" },
+            );
+            if (open.some((issue) => issue.title === title)) {
+              return;
+            }
+            const run = `${context.serverUrl}/` +
+              `${context.repo.owner}/${context.repo.repo}/` +
+              `actions/runs/${context.runId}`;
+            await github.rest.issues.create({
+              ...context.repo,
+              title,
+              body: [
+                `The \`latest\` job failed for`,
+                `\`${process.env.PROJECT}\` with every pin lifted.`,
+                `The pinned job is unaffected. Run: ${run}`,
+              ].join("\n"),
+            });
+
+  secrets-guard:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - name: No .env file is committed
+        run: |
+          found=$(git ls-files \
+            | grep -E '(^|/)\.env(\..+)?$' \
+            | grep -v -E '\.env\.example$' || true)
+          if [ -n "$found" ]; then
+            echo "::error::Committed env file(s): $found"
+            exit 1
+          fi
+      - name: No key-shaped string is committed
+        run: |
+          p='sk-[A-Za-z0-9_-]{20,}'
+          p+='|sk_live_[A-Za-z0-9]{16,}'
+          p+='|ghp_[A-Za-z0-9]{36}'
+          p+='|github_pat_[A-Za-z0-9_]{40,}'
+          p+='|AKIA[0-9A-Z]{16}'
+          p+='|xox[abprs]-[A-Za-z0-9-]{10,}'
+          p+='|-----BEGIN [A-Z ]*PRIVATE KEY-----'
+          if git grep -n -I -E "$p" -- . \
+            ':!.github/workflows/ci.yml'; then
+            echo "::error::Key-shaped string found above."
+            exit 1
+          fi
