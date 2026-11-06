@@ -36,7 +36,7 @@ if __name__ == "__main__":
     start = datetime(2026, 11, 10, 10, 0, tzinfo=UTC)
     clock = FixedClock(datetime(2026, 11, 9, 9, 0, tzinfo=UTC))
     print("free:", cancellation_is_free(start, clock))
-    try:
-        ForgetfulClock()  # type: ignore[abstract]  # mypy says no too
+    try:  # mypy rejects the next line too, hence the ignore
+        ForgetfulClock()  # type: ignore[abstract]
     except TypeError as error:
         print("TypeError:", error)

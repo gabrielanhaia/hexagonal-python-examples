@@ -3,19 +3,16 @@
 Chapter 3. Three small, runnable files and one that exists to be
 rejected.
 
-| File                        | Shows                                  |
-|-----------------------------|----------------------------------------|
-| `protocol_port.py`          | a `Clock` port as a `typing.Protocol`; |
-|                             | adapters match it without importing it |
-| `abc_port.py`               | the same port as an `abc.ABC`; adapters |
-|                             | must inherit, and an incomplete one    |
-|                             | fails at instantiation                 |
-| `runtime_checkable_trap.py` | `@runtime_checkable` accepts a clock   |
-|                             | whose `now()` returns a `str`: it      |
-|                             | checks that the member exists, nothing |
-|                             | more                                   |
-| `wrong_adapter.py`          | the same wrong clock passed to a       |
-|                             | `Clock` parameter; mypy rejects it     |
+- `protocol_port.py`: a `Clock` port as a `typing.Protocol`;
+  the adapters match it without importing it.
+- `abc_port.py`: the same port as an `abc.ABC`; every adapter
+  must inherit from it, and an incomplete one fails when it is
+  instantiated.
+- `runtime_checkable_trap.py`: `@runtime_checkable` accepts a
+  clock whose `now()` returns a `str`. It checks that the member
+  exists, nothing more.
+- `wrong_adapter.py`: the same wrong clock passed to a `Clock`
+  parameter. mypy rejects it; Python only fails at runtime.
 
 ```bash
 cd ch03
