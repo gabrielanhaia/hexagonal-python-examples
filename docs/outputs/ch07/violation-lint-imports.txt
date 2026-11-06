@@ -1,0 +1,27 @@
+$ cd ch07/violation && uv run lint-imports --no-logo
+
+---------
+Contracts
+---------
+
+Analyzed 11 files, 6 dependencies.
+----------------------------------
+
+Dependencies point inward KEPT
+The domain imports no framework BROKEN
+
+Contracts: 1 kept, 1 broken.
+
+
+----------------
+Broken contracts
+----------------
+
+The domain imports no framework
+-------------------------------
+
+roombook.domain is not allowed to import sqlalchemy:
+
+-   roombook.domain.booking -> sqlalchemy (l.3, l.4)
+
+
