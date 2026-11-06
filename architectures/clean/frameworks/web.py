@@ -56,7 +56,9 @@ async def hold_room(
 ) -> JSONResponse:
     presenter = HoldRoomPresenter()
     interactor = HoldRoomInteractor(
-        rooms=gateways.rooms, bookings=gateways.bookings, output=presenter
+        rooms=gateways.rooms,
+        bookings=gateways.bookings,
+        output=presenter,
     )
     await HoldRoomController(interactor).hold(
         room_id=room_id,
@@ -73,7 +75,9 @@ async def cancel_booking(
 ) -> JSONResponse:
     presenter = CancelBookingPresenter()
     interactor = CancelBookingInteractor(
-        bookings=gateways.bookings, clock=gateways.clock, output=presenter
+        bookings=gateways.bookings,
+        clock=gateways.clock,
+        output=presenter,
     )
     await CancelBookingController(interactor).cancel(
         booking_id=booking_id
