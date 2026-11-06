@@ -1,0 +1,61 @@
+[project]
+name = "arch-hexagonal"
+version = "1.0.0"
+description = "Hold and cancel a room: hexagonal architecture."
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi==0.162.0",
+    "pydantic==2.14.3",
+]
+
+[dependency-groups]
+dev = [
+    "httpx2==2.16.0",
+    "import-linter==2.16",
+    "mypy==2.4.1",
+    "pytest==9.2.0",
+    "ruff==0.17.4",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 68
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+
+[tool.mypy]
+strict = true
+files = [
+    "domain",
+    "application",
+    "adapters",
+    "composition",
+    "tests",
+]
+
+[tool.pytest]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.importlinter]
+root_packages = [
+    "composition",
+    "adapters",
+    "application",
+    "domain",
+]
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "Dependencies point inward"
+type = "layers"
+layers = ["composition", "adapters", "application", "domain"]
+
+[[tool.importlinter.contracts]]
+name = "The core imports no framework"
+type = "forbidden"
+source_modules = ["application", "domain"]
+forbidden_modules = ["fastapi", "pydantic", "starlette"]
