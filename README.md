@@ -11,6 +11,13 @@ Anhaia.
 
 Repository: https://github.com/gabrielanhaia/hexagonal-python-examples
 
+## Get the book
+
+- [Kindle](https://www.amazon.com/dp/B0HQWDH23Q)
+- [Paperback](https://www.amazon.com/dp/B0HQWYFK13)
+- [Hardcover](https://www.amazon.com/dp/B0HQWTXMYG)
+- [About the book](https://xgabriel.com/hexagonal-python)
+
 Every listing in the book that names a path in this repository is
 quoted from it, and every output the book prints was recorded from
 it (see `docs/outputs/`).
